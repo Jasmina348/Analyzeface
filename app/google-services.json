@@ -1,0 +1,101 @@
+{
+  "project_info": {
+    "project_number": "912532755212",
+    "firebase_url": "https://inspiring-admob.firebaseio.com",
+    "project_id": "inspiring-admob",
+    "storage_bucket": "inspiring-admob.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912532755212:android:c0d181da4afb3545",
+        "android_client_info": {
+          "package_name": "analyzeface.inspiringlab.com.np.analyzeface"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912532755212-v05ef827j795s2pqcvv5bq68lmfuffdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "analyzeface.inspiringlab.com.np.analyzeface",
+            "certificate_hash": "68eddcbbf81ea4e77c479e6042c89f93616270e4"
+          }
+        },
+        {
+          "client_id": "912532755212-lnvh8boco1dhmo15orggbkqe9lde5s1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSomQ6qU0X9FoYlFsrfgpbYY5gda9y3ps"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912532755212-lnvh8boco1dhmo15orggbkqe9lde5s1i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-3278119331694488~1113493390"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912532755212:android:c0433f255559d891",
+        "android_client_info": {
+          "package_name": "analyzeface.inspiringlab.com.np.analyzeface"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912532755212-hjb5k5b1kmm8rknodd97ifqi0unhsa2o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "analyzeface.inspiringlab.com.np.analyzeface",
+            "certificate_hash": "68eddcbbf81ea4e77c479e6042c89f93616270e4"
+          }
+        },
+        {
+          "client_id": "912532755212-lnvh8boco1dhmo15orggbkqe9lde5s1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSomQ6qU0X9FoYlFsrfgpbYY5gda9y3ps"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912532755212-lnvh8boco1dhmo15orggbkqe9lde5s1i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-3278119331694488~1638504949"
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>admob_app_id_wit</key>
+        <value>ca-app-pub-3278119331694488~1638504949</value>
+    </entry>
+    <entry>
+        <key>banner_ad_wit</key>
+        <value>ca-app-pub-3278119331694488/2315068469</value>
+    </entry>
+    <entry>
+        <key>interestitial_ad_wit</key>
+        <value>ca-app-pub-3940256099942544/1033173712</value>
+    </entry>
+    <entry>
+        <key>test_id_1_dt</key>
+        <value>4E550AAAB797FF959C2B22B66548B3B2</value>
+    </entry>
+    <entry>
+        <key>test_id_2_dt</key>
+        <value>4E550AAAB797FF959C2B22B66548B3B2</value>
+    </entry>
+    <entry>
+        <key>test_id_3_dt</key>
+        <value>4E550AAAB797FF959C2B22B66548B3B2</value>
+    </entry>
+    <entry>
+        <key>test_id_4_dt</key>
+        <value>4E550AAAB797FF959C2B22B66548B3B2</value>
+    </entry>
+    <entry>
+        <key>test_id_5_dt</key>
+        <value>4E550AAAB797FF959C2B22B66548B3B2</value>
+    </entry>
+
+</defaultsMap>
