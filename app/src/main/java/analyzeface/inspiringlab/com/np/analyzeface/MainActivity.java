@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.Contacts;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -84,9 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int CAPTURE_REQUEST_CODE = 101;
     private static final int PICK_IMAGE = 102;
 
-    //TextView scanText;
-    ImageButton from_scan;
-    ImageButton from_gallery;
+    ImageButton cameraBtn;
+    ImageButton galleryBtn;
     static ConstraintLayout activity_main;
 
     public final String APP_TAG = "MainActivity";
@@ -108,18 +108,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.INTERNET
                 ).withListener(new MultiplePermissionsListener() {
-            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport report) {
                 //onLaunchCamera();
             }
-            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                 token.continuePermissionRequest();
             }
         }).check();
+        initializeView();
 
         sharedPreferences = new MySharedPreferences(this);
 
@@ -131,142 +134,129 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        activity_main = findViewById(R.id.activity_main);
-
-        from_scan = findViewById(R.id.scan_image);
-
-        from_gallery = findViewById(R.id.from_gallery);
 
         sharedPrefs = new MySharedPreferences(this);
-
-        from_scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-
-                MultiplePermissionsListener snackbarMultiplePermissionsListener =
-                        SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
-                                .with(v, "Camera and audio access is needed to take pictures. Go to settings to enable the permissions.")
-                                .withOpenSettingsButton("Settings")
-                                .withCallback(new Snackbar.Callback() {
-                                    @Override
-                                    public void onShown(Snackbar snackbar) {
-                                        // Event handler for when the given Snackbar has been dismissed
-                                    }
-                                    @Override
-                                    public void onDismissed(Snackbar snackbar, int event) {
-                                        // Event handler for when the given Snackbar is visible
-                                    }
-                                })
-                                .withDuration(Snackbar.LENGTH_LONG)
-                                .build();
-
-                MultiplePermissionsListener permissionsListener = new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            onLaunchCamera();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // permission is denied permenantly, navigate user to app settings
-                        }
-                    }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                };
-
-                MultiplePermissionsListener compositePermissionsListener = new CompositeMultiplePermissionsListener(snackbarMultiplePermissionsListener, permissionsListener);
-
-                Dexter.withActivity(MainActivity.this)
-                        .withPermissions(
-                                Manifest.permission.CAMERA,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                        ).withListener(compositePermissionsListener).check();
-            }
-        });
-
-        from_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                MultiplePermissionsListener snackbarMultiplePermissionsListener =
-                        SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
-                                .with(v, "Storage access is needed to select images from Gallery. Go to settings to enable the permissions.")
-                                .withOpenSettingsButton("Settings")
-                                .withCallback(new Snackbar.Callback() {
-                                    @Override
-                                    public void onShown(Snackbar snackbar) {
-                                        // Event handler for when the given Snackbar has been dismissed
-                                    }
-                                    @Override
-                                    public void onDismissed(Snackbar snackbar, int event) {
-                                        // Event handler for when the given Snackbar is visible
-                                    }
-                                })
-                                .withDuration(Snackbar.LENGTH_LONG)
-                                .build();
-
-                MultiplePermissionsListener permissionsListener = new MultiplePermissionsListener() {
-                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            openGallery();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // permission is denied permenantly, navigate user to app settings
-                        }
-                    }
-                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                };
-
-                MultiplePermissionsListener compositePermissionsListener = new CompositeMultiplePermissionsListener(snackbarMultiplePermissionsListener, permissionsListener);
-
-
-                Dexter.withActivity(MainActivity.this)
-                        .withPermissions(
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                        ).withListener(compositePermissionsListener).check();
-            }
-        });
-
-
-        // Get Remote Config instance.
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        // [START enable_dev_mode]
+
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
-        // [END enable_dev_mode]
-        // [START set_default_values]
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-        // [END set_default_values]
-
-        // Fetch firebase remote config
         fetchRemoteConfig();
 
         Log.d("REMOTECONFIG", sharedPreferences.getRemoteconfig(Config.ADMOB_APP_ID));
-
-        // cloud messaging
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
+            String channelId = getString(R.string.default_notification_channel_id);
             String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW));
         }
+    }
+
+    private void initializeView() {
+        activity_main = findViewById(R.id.activity_main);
+        cameraBtn = findViewById(R.id.scan_image);
+        galleryBtn = findViewById(R.id.from_gallery);
+
+    }
+
+    private void setCameraBtn() {
+        cameraBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        MultiplePermissionsListener snackbarMultiplePermissionsListener =
+                                SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
+                                        .with(v, "Camera and audio access is needed to take pictures. Go to settings to enable the permissions.")
+                                        .withOpenSettingsButton("Settings")
+                                        .withCallback(new Snackbar.Callback() {
+                                            @Override
+                                            public void onShown(Snackbar snackbar) {
+                                                // Event handler for when the given Snackbar has been dismissed
+                                            }
+
+                                            @Override
+                                            public void onDismissed(Snackbar snackbar, int event) {
+                                                // Event handler for when the given Snackbar is visible
+                                            }
+                                        })
+                                        .withDuration(Snackbar.LENGTH_LONG)
+                                        .build();
+
+                        MultiplePermissionsListener permissionsListener = new MultiplePermissionsListener() {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                                // check if all permissions are granted
+                                if (report.areAllPermissionsGranted()) {
+                                    onLaunchCamera();
+                                }
+
+                                // check for permanent denial of any permission
+                                if (report.isAnyPermissionPermanentlyDenied()) {
+                                    // permission is denied permenantly, navigate user to app settings
+                                }
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        };
+
+                        MultiplePermissionsListener compositePermissionsListener = new CompositeMultiplePermissionsListener(snackbarMultiplePermissionsListener, permissionsListener);
+                        Dexter.withActivity(MainActivity.this)
+                                .withPermissions(
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                ).withListener(compositePermissionsListener).check();
+                    }
+                }
+        );
+    }
+
+    private void setGalleryBtn() {
+        galleryBtn
+                .setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MultiplePermissionsListener snackbarMultiplePermissionsListener = SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
+                                        .with(v, "Storage access is needed to select images from Gallery. Go to settings to enable the permissions.")
+                                        .withOpenSettingsButton("Settings")
+                                        .withCallback(new Snackbar.Callback() {
+                                        })
+                                        .withDuration(Snackbar.LENGTH_LONG)
+                                        .build();
+                                MultiplePermissionsListener permissionsListener = new MultiplePermissionsListener() {
+                                    @Override
+                                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                        // check if all permissions are granted
+                                        if (report.areAllPermissionsGranted()) {
+                                            openGallery();
+                                        }
+                                        // check for permanent denial of any permission
+                                        if (report.isAnyPermissionPermanentlyDenied()) {
+                                            // permission is denied permenantly, navigate user to app settings
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                        token.continuePermissionRequest();
+                                    }
+                                };
+                                MultiplePermissionsListener compositePermissionsListener = new CompositeMultiplePermissionsListener(snackbarMultiplePermissionsListener, permissionsListener);
+                                Dexter.withActivity(MainActivity.this).withPermissions(
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE).withListener(compositePermissionsListener).check();
+                            }
+                        }
+                );
+
     }
 
     /**
@@ -302,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
         // [END fetch_config_with_callback]
     }
 
-    public void showMobileAds(){
+    public void showMobileAds() {
         MobileAds.initialize(this, sharedPreferences.getRemoteconfig(Config.ADMOB_APP_ID));
 
         RelativeLayout rl_banner_ad = findViewById(R.id.home_banner_ad_view);
@@ -358,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         loadInterstitial();
     }
 
-    public void setRemoteConfig(){
+    public void setRemoteConfig() {
         // [START get_config_values]
         String admobAppId = mFirebaseRemoteConfig.getString(Config.ADMOB_APP_ID);
         String bannerAdId = mFirebaseRemoteConfig.getString(Config.BANNER_AD_ID);
@@ -422,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                Log.d("ADS","lOADED..");
+                Log.d("ADS", "lOADED..");
             }
 
             @Override
@@ -462,10 +452,11 @@ public class MainActivity extends AppCompatActivity {
         loadInterstitial();
     }
 
-    public void openGallery(){
+    public void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
 
@@ -479,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
         Uri fileProvider;
         if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)) {
             fileProvider = FileProvider.getUriForFile(MainActivity.this, "analyzeface.inspiringlab.com.np.analyzeface.fileprovider", photoFile);
-        }else {
+        } else {
             fileProvider = Uri.fromFile(photoFile);
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
@@ -499,7 +490,7 @@ public class MainActivity extends AppCompatActivity {
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
 
         // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(APP_TAG, "failed to create directory");
         }
 
@@ -516,15 +507,15 @@ public class MainActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 File photoFile = getPhotoFileUri("photo.jpg");
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                Display display = getWindowManager(). getDefaultDisplay();
+                Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
                 int width = size.x;
                 int height = size.y;
-                if(width >= height){
+                if (width >= height) {
                     takenImage = Bitmap.createScaledBitmap(takenImage, width, height, false);
                 }
-                takenImage = getResizedBitmap(takenImage, 500);
+                takenImage = getResizedBitmap(takenImage, 1000);
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 //ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
@@ -533,12 +524,12 @@ public class MainActivity extends AppCompatActivity {
                 uploadImage(convertIntoBytes(takenImage));
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-                Log.e("ERROR", "Picture wasn't taken!"+resultCode);
+                Log.e("ERROR", "Picture wasn't taken!" + resultCode);
             }
         }
 
-        if(requestCode == PICK_IMAGE){
-            if(resultCode == RESULT_OK){
+        if (requestCode == PICK_IMAGE) {
+            if (resultCode == RESULT_OK) {
 
                 try {
                     final Uri imageUri = data.getData();
@@ -552,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-            }else{
+            } else {
                 Toast.makeText(this, "Could't select image!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -561,6 +552,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * reduces the size of the image
      * param image bitmap received from camera
+     *
      * @param maxSize
      * @return
      */
@@ -568,7 +560,7 @@ public class MainActivity extends AppCompatActivity {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        float bitmapRatio = (float)width / (float) height;
+        float bitmapRatio = (float) width / (float) height;
         if (bitmapRatio > 0) {
             width = maxSize;
             height = (int) (width / bitmapRatio);
@@ -580,7 +572,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public static byte[] convertIntoBytes(Bitmap bitmap){
+    public static byte[] convertIntoBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
@@ -592,7 +584,7 @@ public class MainActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "1mind_" + timeStamp + ".jpg";
         Log.d("IMAGEROOT:", Environment.getExternalStorageDirectory().toString());
-        File photo = new File(Environment.getExternalStorageDirectory()+"/Pictures",  imageFileName);
+        File photo = new File(Environment.getExternalStorageDirectory() + "/Pictures", imageFileName);
         return photo;
     }
 
@@ -616,23 +608,26 @@ public class MainActivity extends AppCompatActivity {
 
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
 
+
         String randomSalt = Long.toHexString(Double.doubleToLongBits(Math.random()));
 
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", "image_"+randomSalt+".jpg", requestFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", "image_" + randomSalt + ".jpg", requestFile);
         Call<ResponseModal> call = retrofitInterface.uploadImage(body);
         call.enqueue(new Callback<ResponseModal>() {
+
             @Override
             public void onResponse(Call<ResponseModal> call, retrofit2.Response<ResponseModal> response) {
 
                 if (response.isSuccessful()) {
 
                     ResponseModal responseBody = response.body();
-                    try{
-                    dialog.dismiss();
-                    }catch(Exception e){
+                    Log.d(TAG, "onResponse: " + response.body());
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.d(TAG, responseBody.getImage());
+//                    Log.d(TAG, responseBody.getImage());
                     Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
                     //resultIntent.putExtra("encoded_image", responseBody.getImage());
                     sharedPrefs.setEncodedImage(responseBody.getImage());
@@ -666,29 +661,30 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseModal> call, Throwable t) {
-                try{
+                try {
                     dialog.dismiss();
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
+
                 }
                 //mProgressBar.setVisibility(View.GONE);
-                Log.d(TAG, "onFailure: "+t.getLocalizedMessage());
+                Log.d(TAG, "onFailure: " + t.getLocalizedMessage());
 
                 new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Upload failed")
-                    .setMessage("Unable to upload image to the server. Please try again.")
-                    .setCancelable(false)
-                    .setNeutralButton("TRY AGAIN", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Whatever...
-                        }
-                    }).show();
+                        .setTitle("Upload failed")
+                        .setMessage("Unable to upload image to the server. Please try again.")
+                        .setCancelable(false)
+                        .setNeutralButton("TRY AGAIN", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Whatever...
+                            }
+                        }).show();
             }
         });
     }
 
-    public void shareThisApp(){
+    public void shareThisApp() {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
@@ -719,30 +715,22 @@ public class MainActivity extends AppCompatActivity {
      * Determine if the Play Store is installed on the device
      *
      * */
-    public void rateApp()
-    {
-        try
-        {
+    public void rateApp() {
+        try {
             Intent rateIntent = rateIntentForUrl("market://details");
             startActivity(rateIntent);
-        }
-        catch (ActivityNotFoundException e)
-        {
+        } catch (ActivityNotFoundException e) {
             Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
             startActivity(rateIntent);
         }
     }
 
-    private Intent rateIntentForUrl(String url)
-    {
+    private Intent rateIntentForUrl(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, getPackageName())));
         int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
-        if (Build.VERSION.SDK_INT >= 21)
-        {
+        if (Build.VERSION.SDK_INT >= 21) {
             flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
-        }
-        else
-        {
+        } else {
             //noinspection deprecation
             flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
         }
@@ -805,7 +793,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-            if (networkChangeReceiver!=null) {
+            if (networkChangeReceiver != null) {
                 unregisterReceiver(networkChangeReceiver);
             }
         } catch (IllegalArgumentException e) {
@@ -820,7 +808,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onPause();
         try {
-            if (networkChangeReceiver!=null) {
+            if (networkChangeReceiver != null) {
                 unregisterReceiver(networkChangeReceiver);
             }
         } catch (IllegalArgumentException e) {
@@ -832,9 +820,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        try{
+        try {
             registerReceiver(networkChangeReceiver, intentFilter);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -845,18 +833,15 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public class NetworkChangeReceiver extends BroadcastReceiver
-    {
+    public class NetworkChangeReceiver extends BroadcastReceiver {
         AlertDialog.Builder alert_builder;
         boolean isOnline = false;
 
         @Override
-        public void onReceive(final Context context, final Intent intent)
-        {
-            try
-            {
+        public void onReceive(final Context context, final Intent intent) {
+            try {
                 if (isOnline(context)) {
-                    if(isOnline) {
+                    if (isOnline) {
                         //displayNetworkActivityMessage(true);
                         isOnline = false;
                     }

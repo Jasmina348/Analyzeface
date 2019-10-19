@@ -8,6 +8,6 @@ import retrofit2.http.Part;
 
 public interface RetrofitInterface {
     @Multipart
-    @POST("/detect_objects_v15")
-    Call<ResponseModal> uploadImage(@Part MultipartBody.Part image);
+    @POST("/detect-faces")
+ Call<ResponseModal> uploadImage(@Part MultipartBody.Part image);
 }

@@ -18,7 +18,7 @@ public class MySharedPreferences {
     Context _context;
 
     // Sharedpref file name
-    private static final String PREFS_FILE_NAME = "WhatIsThisPrefs";
+    private static final String PREFS_FILE_NAME = "AnalyzeFacePrefs";
     private static final String PREFERENCE_VERSION = "PREFERENCE_VERSION";
 
     private static int APP_VERSION_CODE = 1; /*change this each time you want to clear preference in updated app.*/
