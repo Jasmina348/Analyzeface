@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.provider.Contacts;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -47,7 +46,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -56,10 +55,13 @@ import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,13 +70,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import analyzeface.inspiringlab.com.np.analyzeface.model.AgeRange;
+import analyzeface.inspiringlab.com.np.analyzeface.model.Face;
+import analyzeface.inspiringlab.com.np.analyzeface.model.Feature;
+import analyzeface.inspiringlab.com.np.analyzeface.model.MainResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -620,39 +626,92 @@ public class MainActivity extends AppCompatActivity {
         String randomSalt = Long.toHexString(Double.doubleToLongBits(Math.random()));
 
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", "image_"+randomSalt+".jpg", requestFile);
-        Call<ResponseModal> call = retrofitInterface.uploadImage(body);
-        call.enqueue(new Callback<ResponseModal>() {
+        Call<JsonObject> call = retrofitInterface.uploadImage(body);
+
+        call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<ResponseModal> call, retrofit2.Response<ResponseModal> response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                try {
+                    dialog.dismiss();
+//                } catch (Exception e) {
+//                }
+//                    e.printStackTrace();
 
-                if (response.isSuccessful()) {
+                try {
+                    JSONObject res = new JSONObject(response.body().toString());
+                    Log.d(TAG, "onResponse: " + res);
+                    if  (res.getBoolean("STATUS")) {
+                        JSONObject data = new JSONObject(res.getString("DATA"));
 
-                    ResponseModal responseBody = response.body();
-                    try{
-                        dialog.dismiss();
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-//                    Log.d(TAG, responseBody.getImage());
-                    Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
-                    //resultIntent.putExtra("encoded_image", responseBody.getImage());
-                    sharedPrefs.setEncodedImage(responseBody.getImage());
-                    startActivity(resultIntent);
-                } else {
-
-                    ResponseBody errorBody = response.errorBody();
-
-                    Gson gson = new Gson();
-
-                    try {
-                        Log.e(TAG, errorBody.string());
-                        dialog.dismiss();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                        String imageName = data.getString("image_id");
+                        MainResponse mainResponse = new MainResponse();
+                        mainResponse.setImage(imageName);
 
 
-                    new AlertDialog.Builder(MainActivity.this)
+                        JSONObject details = data.getJSONObject("details");
+                        JSONArray faces =  details.getJSONArray("faces"); // list of faces
+
+                        ArrayList<Face> listFace = new ArrayList<>(); // parse list of faces
+
+                        for (int i = 0; i < faces.length(); i++) {
+                            JSONObject face = faces.getJSONObject(i);
+                            Face currentFace = new Face();
+
+                            while(face.keys().hasNext()) {
+                                /**
+                                 * key value pairs
+                                 * distinct for emotion, image and age_range
+                                 */
+                                JSONObject object = new JSONObject();
+                                JSONArray array = new JSONArray();
+                                Feature features =  new Feature();
+
+                                String key = face.keys().next();
+
+                                if  (key.equalsIgnoreCase("Emotions")) {
+                                    array = face.getJSONArray(key);
+                                } else {
+                                    object = face.getJSONObject(key);
+                                }
+
+                                if  (key.equalsIgnoreCase("Image")) {
+                                    currentFace.setImage(object.getString(key));
+                                } else if (key.equalsIgnoreCase("Age_range")) {
+                                    currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
+                                } else if (key.equalsIgnoreCase("Emotions")) {
+                                    ArrayList<Feature> emotionList = new ArrayList<>();
+                                    for (int j = 0; j < array.length(); j++) {
+                                        JSONObject o = array.getJSONObject(i);
+                                        Feature f = new Feature();
+                                        f.setFeature(o.getString("Type"));
+                                        f.setConfidence(o.getDouble("Confidence"));
+
+                                        emotionList.add(f);
+                                    }
+                                    currentFace.setEmotions(emotionList);
+                                } else {
+                                    // add feature to feature list
+                                    features.setFeature(key);
+                                    features.setConfidence(object.getDouble("Confidence"));
+                                    features.setValue(String.valueOf(object.get("Value")));
+
+                                    currentFace.getFeatureList().add(features);
+                                }
+                                listFace.add(currentFace);
+                            }
+
+                            Log.d(TAG, "onResponse: herhe");
+                        }
+
+                        Log.d(TAG, "onResponse: herhe");
+                        mainResponse.setFaces(listFace);
+//                        Toast.makeText(MainActivity.this, "success parsing", Toast.LENGTH_SHORT).show();
+                        Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
+                        startActivity(resultIntent);
+
+                    } else {
+                        Log.d(TAG, "onResponse: " + response.body());
+                        new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Upload failed")
                             .setMessage("Unable to upload image to the server. Please try again.")
                             .setCancelable(false)
@@ -662,13 +721,59 @@ public class MainActivity extends AppCompatActivity {
                                     // Whatever...
                                 }
                             }).show();
+
+                    }
+                } catch (JSONException e) {
+                    dialog.dismiss();
+                    Toast.makeText(MainActivity.this, "Error parsing", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
+
+//                Log.d(TAG, "onResponse: " + response.body());
+//                if (response.isSuccessful()) {
+//
+//                    ResponseModal responseBody = response.body();
+//                    try{
+//                        dialog.dismiss();
+//                    }catch(Exception e){
+//                        e.printStackTrace();
+//                    }
+////                    Log.d(TAG, responseBody.getImage());
+//                    Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
+//                    //resultIntent.putExtra("encoded_image", responseBody.getImage());
+//                    sharedPrefs.setEncodedImage(responseBody.getImage());
+//                    startActivity(resultIntent);
+//                } else {
+//
+//                    ResponseBody errorBody = response.errorBody();
+//
+//                    Gson gson = new Gson();
+//
+//                    try {
+//                        Log.e(TAG, errorBody.string());
+//                        dialog.dismiss();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//
+//                    new AlertDialog.Builder(MainActivity.this)
+//                            .setTitle("Upload failed")
+//                            .setMessage("Unable to upload image to the server. Please try again.")
+//                            .setCancelable(false)
+//                            .setNeutralButton("TRY AGAIN", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // Whatever...
+//                                }
+//                            }).show();
+//                }
             }
 
             @Override
-            public void onFailure(Call<ResponseModal> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 try{
-                    dialog.dismiss();
+//                    dialog.dismiss();
                 }catch(Exception e){
                     e.printStackTrace();
                 }

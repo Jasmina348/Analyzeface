@@ -3,8 +3,9 @@ package analyzeface.inspiringlab.com.np.analyzeface;
 public class Config {
 
     public static final String CLIENT_ID = "YOUR_CLIENT_ID";
-    public static final String API_URL = "http://192.168.0.118:8877";
+//    public static final String API_URL = "http://192.168.0.118:8877";
 //    public static final String API_URL = "http://63.142.252.233:5555";
+    public static final String API_URL = "http://playground.inspiringlab.com.np:8877";
 
     // Remote Config keys
     public static final String ADMOB_APP_ID = "admob_app_id_wit";
