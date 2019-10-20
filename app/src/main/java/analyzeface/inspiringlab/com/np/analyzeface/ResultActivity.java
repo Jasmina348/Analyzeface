@@ -52,37 +52,38 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_result);
-        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-        initializeView();
-        loadImage();
-        initializeAd();
-    }
 
-    private void initializeView() {
         imageView = findViewById(R.id.result_image);
+        //progressBar = findViewById(R.id.image_loading);
+        //progressText = findViewById(R.id.progress_text);
 
-    }
-
-    private void loadImage() {
+        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
         sharedPreferences = new MySharedPreferences(this);
+
+        //String url_name = getIntent().getExtras().getString("url_name");
+        //String encodedImage = getIntent().getExtras().getString("encoded_image");
         String encodedImage = sharedPreferences.getEncodedImage();
 
-        byte[] decodedString = Base64.decode(encodedImage, Base64.NO_WRAP);
-        InputStream inputStream = new ByteArrayInputStream(decodedString);
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        //Log.d(TAG, url_name);
+
+        //byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        // new AsyncTaskLoadImage(imageView, progressBar, progressText).execute(url_name);
+
+        byte[] decodedString = Base64.decode(encodedImage,Base64.NO_WRAP);
+        InputStream inputStream  = new ByteArrayInputStream(decodedString);
+        Bitmap bitmap  = BitmapFactory.decodeStream(inputStream);
         imageView.setImageBitmap(bitmap);
-
-    }
-
-    private void initializeAd() {
 
         RelativeLayout rl_banner_ad = findViewById(R.id.result_banner_ad_view);
         AdView mAdView = new AdView(ResultActivity.this);
         mAdView.setAdSize(AdSize.FULL_BANNER);
         mAdView.setAdUnitId(sharedPreferences.getRemoteconfig(Config.BANNER_AD_ID));
 
-
+        // Load an ad into the AdMob banner view.
         rl_banner_ad.addView(mAdView);
+
+        //adView.setAdUnitId(getString(R.string.banner_ad_unit_id_test));
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(sharedPreferences.getRemoteconfig(Config.TEST_DEVICE_ID_1))
                 .addTestDevice(sharedPreferences.getRemoteconfig(Config.TEST_DEVICE_ID_2))
@@ -120,23 +121,52 @@ public class ResultActivity extends AppCompatActivity {
                 // to the app after tapping on an ad.
             }
         });
-
     }
 
-    private void saveImage() {
-        Log.d("SAVEIMAGE", "called");
+    private void showDownloadNotification(){
+        NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher_round) // notification icon
+                .setContentTitle("Download successful!") // title for notification
+                .setContentText("Click to open gallery") // message for notification
+                .setAutoCancel(true); // clear notification after click
+
+
+        Intent intent = new Intent();
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        File root = new File(
+                Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DCIM
+                ),
+                "WhatIsThis"
+        );
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.withAppendedPath(Uri.fromFile(root), "/"), "image/*");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //startActivity(intent);
+
+        PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
+        mBuilder.setContentIntent(pi);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
+    }
+
+
+    private void saveImage(){
+        Log.d("SAVEIMAGE","called");
         imageView.buildDrawingCache();
-        Bitmap bmp = imageView.getDrawingCache();
+        Bitmap bmp=imageView.getDrawingCache();
 
         OutputStream fOut = null;
         File root = new File(
                 Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DCIM
                 ),
-                "AnalyzeFace"
+                "WhatIsThis"
         );
 
-        String randName = "WIT_" + Long.toHexString(Double.doubleToLongBits(Math.random())) + ".jpg";
+        String randName = "WIT_"+Long.toHexString(Double.doubleToLongBits(Math.random()))+".jpg";
 
         //Uri outputFileUri;
         try {
@@ -175,6 +205,40 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
+    private String rotateImage(int degree, String imagePath){
+
+        if(degree<=0){
+            return imagePath;
+        }
+        try{
+            Bitmap b= BitmapFactory.decodeFile(imagePath);
+
+            Matrix matrix = new Matrix();
+            if(b.getWidth()>b.getHeight()){
+                matrix.setRotate(degree);
+                b = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(),
+                        matrix, true);
+            }
+
+            FileOutputStream fOut = new FileOutputStream(imagePath);
+            String imageName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+            String imageType = imageName.substring(imageName.lastIndexOf(".") + 1);
+
+            FileOutputStream out = new FileOutputStream(imagePath);
+            if (imageType.equalsIgnoreCase("png")) {
+                b.compress(Bitmap.CompressFormat.PNG, 100, out);
+            }else if (imageType.equalsIgnoreCase("jpeg")|| imageType.equalsIgnoreCase("jpg")) {
+                b.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            }
+            fOut.flush();
+            fOut.close();
+
+            b.recycle();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return imagePath;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -184,7 +248,7 @@ public class ResultActivity extends AppCompatActivity {
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
-        public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+        public boolean onScale(ScaleGestureDetector scaleGestureDetector){
             mScaleFactor *= scaleGestureDetector.getScaleFactor();
             mScaleFactor = Math.max(0.1f,
                     Math.min(mScaleFactor, 10.0f));
@@ -197,7 +261,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
+    public boolean onSupportNavigateUp(){
         finish();
         return true;
     }
@@ -211,6 +275,7 @@ public class ResultActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
         switch (item.getItemId()) {
             case R.id.m_save_button:
                 saveImage();
