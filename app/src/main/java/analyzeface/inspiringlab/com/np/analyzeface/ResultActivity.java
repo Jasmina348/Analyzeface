@@ -30,12 +30,20 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+import analyzeface.inspiringlab.com.np.analyzeface.model.AgeRange;
+import analyzeface.inspiringlab.com.np.analyzeface.model.Face;
+import analyzeface.inspiringlab.com.np.analyzeface.model.Feature;
 import analyzeface.inspiringlab.com.np.analyzeface.model.MainResponse;
 
 import static java.security.AccessController.getContext;
@@ -60,7 +68,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         imageView = findViewById(R.id.result_image);
-        recyclerView=findViewById(R.id.recycler);
+        recyclerView=findViewById(R.id.recyclerView);
         //progressBar = findViewById(R.id.image_loading);
         //progressText = findViewById(R.id.progress_text);
 
@@ -137,6 +145,95 @@ public class ResultActivity extends AppCompatActivity {
                 // to the app after tapping on an ad.
             }
         });
+
+
+        loadValueFromIntent();
+    }
+
+    private void loadValueFromIntent(){
+        String response  = getIntent().getExtras().getString("analysis_result");
+        try {
+            JSONObject res = new JSONObject(response);
+
+            Log.d(TAG, "loadValueFromIntent: " + response);
+
+            JSONObject data = new JSONObject(res.getString("DATA"));
+
+            String imageName = data.getString("image_id");
+            MainResponse mainResponse = new MainResponse();
+            mainResponse.setImage(imageName);
+
+
+            JSONObject details = data.getJSONObject("details");
+            JSONArray faces =  details.getJSONArray("faces"); // list of faces
+
+            ArrayList<Face> listFace = new ArrayList<>(); // parse list of faces
+            Face currentFace;
+            JSONObject object;
+            JSONArray array;
+            Feature features;
+
+
+
+            for (int i = 0; i < faces.length(); i++) {
+                JSONObject face = faces.getJSONObject(i);
+                Iterator<String> keys = face.keys();
+
+                currentFace = new Face();
+
+                while(keys.hasNext()) {
+                    /**
+                     * key value pairs
+                     * distinct for emotion, image and age_range
+                     */
+                    object = new JSONObject();
+                    array = new JSONArray();
+                    features =  new Feature();
+
+                    String key = keys.next();
+
+                    if  (key.equalsIgnoreCase("Emotions")) {
+                        array = face.getJSONArray(key);
+                    } else {
+                        if  (!key.equalsIgnoreCase("Image")) {
+                            object = face.getJSONObject(key);
+                        }
+                    }
+
+                    if  (key.equalsIgnoreCase("Image")) {
+                        currentFace.setImage(face.getString(key));
+                    }else if (key.equalsIgnoreCase("Age_range")) {
+                        currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
+                    } else if (key.equalsIgnoreCase("Emotions")) {
+                        ArrayList<Feature> emotionList = new ArrayList<>();
+                        for (int j = 0; j < array.length(); j++) {
+                            JSONObject o = array.getJSONObject(i);
+                            Feature f = new Feature();
+                            f.setFeature(o.getString("Type"));
+                            f.setConfidence(o.getDouble("Confidence"));
+
+                            emotionList.add(f);
+                        }
+                        currentFace.setEmotions(emotionList);
+                    } else {
+                        // add feature to feature list
+                        features.setFeature(key);
+                        features.setConfidence(object.getDouble("Confidence"));
+                        features.setValue(String.valueOf(object.get("Value")));
+                        currentFace.getFeatureList().add(features);
+                    }
+
+                }
+
+                listFace.add(currentFace);
+            }
+
+            mainResponse.setFaces(listFace);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void showDownloadNotification(){

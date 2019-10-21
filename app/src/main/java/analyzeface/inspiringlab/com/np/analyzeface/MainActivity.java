@@ -634,95 +634,14 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                try {
-                    dialog.dismiss();
-//                } catch (Exception e) {
-//                }
-//                    e.printStackTrace();
-
+                dialog.dismiss();
                 try {
                     JSONObject res = new JSONObject(response.body().toString());
-                    Log.d(TAG, "onResponse: " + res);
                     if  (res.getBoolean("STATUS")) {
-                        JSONObject data = new JSONObject(res.getString("DATA"));
 
-                        String imageName = data.getString("image_id");
-                        MainResponse mainResponse = new MainResponse();
-                        mainResponse.setImage(imageName);
-
-
-                        JSONObject details = data.getJSONObject("details");
-                        JSONArray faces =  details.getJSONArray("faces"); // list of faces
-
-                        ArrayList<Face> listFace = new ArrayList<>(); // parse list of faces
-                        Face currentFace;
-                        JSONObject object;
-                        JSONArray array;
-                        Feature features;
-
-
-
-                        for (int i = 0; i < faces.length(); i++) {
-                            JSONObject face = faces.getJSONObject(i);
-                            Iterator<String> keys = face.keys();
-
-                            currentFace = new Face();
-
-                            while(keys.hasNext()) {
-                                 /**
-                                 * key value pairs
-                                 * distinct for emotion, image and age_range
-                                 */
-                                 object = new JSONObject();
-                                 array = new JSONArray();
-                                 features =  new Feature();
-
-                                String key = keys.next();
-
-                                if  (key.equalsIgnoreCase("Emotions")) {
-                                    array = face.getJSONArray(key);
-                                } else {
-                                    if  (!key.equalsIgnoreCase("Image")) {
-                                        object = face.getJSONObject(key);
-                                    }
-                                }
-
-                            if  (key.equalsIgnoreCase("Image")) {
-                                currentFace.setImage(face.getString(key));
-                            }else if (key.equalsIgnoreCase("Age_range")) {
-                                    currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
-                                } else if (key.equalsIgnoreCase("Emotions")) {
-                                    ArrayList<Feature> emotionList = new ArrayList<>();
-                                    for (int j = 0; j < array.length(); j++) {
-                                        JSONObject o = array.getJSONObject(i);
-                                        Feature f = new Feature();
-                                        f.setFeature(o.getString("Type"));
-                                        f.setConfidence(o.getDouble("Confidence"));
-
-                                        emotionList.add(f);
-                                    }
-                                    currentFace.setEmotions(emotionList);
-                                } else {
-                                    // add feature to feature list
-                                    features.setFeature(key);
-                                    features.setConfidence(object.getDouble("Confidence"));
-                                    features.setValue(String.valueOf(object.get("Value")));
-                                    currentFace.getFeatureList().add(features);
-                                }
-
-                            }
-
-                            listFace.add(currentFace);
-                            Log.d("PARTY", listFace.toString());
-                            Log.d(TAG, "onResponse: herhe");
-                        }
-
-                        Log.d(TAG, "onResponse: herhe");
-                        mainResponse.setFaces(listFace);
-//                        Toast.makeText(MainActivity.this, "success parsing", Toast.LENGTH_SHORT).show();
                         Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
 
-                        resultIntent.putExtra("KEY",response.body().toString());
+                        resultIntent.putExtra("analysis_result",response.body().toString());
 
                         startActivity(resultIntent);
 
@@ -746,46 +665,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Error parsing", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-
-//                Log.d(TAG, "onResponse: " + response.body());
-//                if (response.isSuccessful()) {
-//
-//                    ResponseModal responseBody = response.body();
-//                    try{
-//                        dialog.dismiss();
-//                    }catch(Exception e){
-//                        e.printStackTrace();
-//                    }
-////                    Log.d(TAG, responseBody.getImage());
-//                    Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
-//                    //resultIntent.putExtra("encoded_image", responseBody.getImage());
-//                    sharedPrefs.setEncodedImage(responseBody.getImage());
-//                    startActivity(resultIntent);
-//                } else {
-//
-//                    ResponseBody errorBody = response.errorBody();
-//
-//                    Gson gson = new Gson();
-//
-//                    try {
-//                        Log.e(TAG, errorBody.string());
-//                        dialog.dismiss();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//
-//                    new AlertDialog.Builder(MainActivity.this)
-//                            .setTitle("Upload failed")
-//                            .setMessage("Unable to upload image to the server. Please try again.")
-//                            .setCancelable(false)
-//                            .setNeutralButton("TRY AGAIN", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // Whatever...
-//                                }
-//                            }).show();
-//                }
             }
 
             @Override
