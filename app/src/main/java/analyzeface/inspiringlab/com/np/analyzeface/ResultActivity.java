@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import analyzeface.inspiringlab.com.np.analyzeface.model.MainResponse;
+
 import static java.security.AccessController.getContext;
 
 public class ResultActivity extends AppCompatActivity {
@@ -42,10 +46,12 @@ public class ResultActivity extends AppCompatActivity {
 
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
+    RecyclerViewAdapter recyclerViewAdapter;
 
     ImageView imageView;
     MySharedPreferences sharedPreferences;
     AdView mAdView;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +60,25 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         imageView = findViewById(R.id.result_image);
+        recyclerView=findViewById(R.id.recycler);
         //progressBar = findViewById(R.id.image_loading);
         //progressText = findViewById(R.id.progress_text);
 
         mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
         sharedPreferences = new MySharedPreferences(this);
 
+
+//        Intent resultIntent = getIntent();
+//         MainResponse data = (MainResponse) resultIntent.putExtra("KEY",);
+        // MainResponse data  = (MainResponse )mIntent.getSerializableExtra("data");
+
         //String url_name = getIntent().getExtras().getString("url_name");
         //String encodedImage = getIntent().getExtras().getString("encoded_image");
         String encodedImage = sharedPreferences.getEncodedImage();
+
+//        recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), data);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
         //Log.d(TAG, url_name);
 
@@ -70,10 +86,10 @@ public class ResultActivity extends AppCompatActivity {
         //Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         // new AsyncTaskLoadImage(imageView, progressBar, progressText).execute(url_name);
 
-        byte[] decodedString = Base64.decode(encodedImage,Base64.NO_WRAP);
-        InputStream inputStream  = new ByteArrayInputStream(decodedString);
-        Bitmap bitmap  = BitmapFactory.decodeStream(inputStream);
-        imageView.setImageBitmap(bitmap);
+//        byte[] decodedString = Base64.decode(encodedImage,Base64.NO_WRAP);
+//        InputStream inputStream  = new ByteArrayInputStream(decodedString);
+//        Bitmap bitmap  = BitmapFactory.decodeStream(inputStream);
+//        imageView.setImageBitmap(bitmap);
 
         RelativeLayout rl_banner_ad = findViewById(R.id.result_banner_ad_view);
         AdView mAdView = new AdView(ResultActivity.this);

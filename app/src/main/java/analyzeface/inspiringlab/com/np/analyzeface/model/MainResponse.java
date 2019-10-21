@@ -1,18 +1,22 @@
 package analyzeface.inspiringlab.com.np.analyzeface.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MainResponse {
+public class MainResponse{
     private String image;
     private ArrayList<Face> faces;
 
-    public MainResponse(){
+    public MainResponse() {
 
     }
-
-    public MainResponse(String image, ArrayList<Face> details) {
+////
+    public MainResponse(String image, ArrayList<Face> faces) {
         this.image = image;
-        this.faces = details;
+        this.faces = faces;
     }
 
     public String getImage() {
@@ -24,10 +28,15 @@ public class MainResponse {
     }
 
     public ArrayList<Face> getFaces() {
-        return faces;
+        if (!(faces == null))
+            return faces;
+        else
+            return new ArrayList<Face>();
     }
 
-    public void setFaces(ArrayList<Face> details) {
-        this.faces = details;
+    public void setFaces(ArrayList<Face> faces) {
+        this.faces = faces;
     }
+
+
 }

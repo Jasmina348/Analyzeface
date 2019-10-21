@@ -36,6 +36,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -63,10 +64,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -652,31 +655,41 @@ public class MainActivity extends AppCompatActivity {
                         JSONArray faces =  details.getJSONArray("faces"); // list of faces
 
                         ArrayList<Face> listFace = new ArrayList<>(); // parse list of faces
+                        Face currentFace;
+                        JSONObject object;
+                        JSONArray array;
+                        Feature features;
+
+
 
                         for (int i = 0; i < faces.length(); i++) {
                             JSONObject face = faces.getJSONObject(i);
-                            Face currentFace = new Face();
+                            Iterator<String> keys = face.keys();
 
-                            while(face.keys().hasNext()) {
-                                /**
+                            currentFace = new Face();
+
+                            while(keys.hasNext()) {
+                                 /**
                                  * key value pairs
                                  * distinct for emotion, image and age_range
                                  */
-                                JSONObject object = new JSONObject();
-                                JSONArray array = new JSONArray();
-                                Feature features =  new Feature();
+                                 object = new JSONObject();
+                                 array = new JSONArray();
+                                 features =  new Feature();
 
-                                String key = face.keys().next();
+                                String key = keys.next();
 
                                 if  (key.equalsIgnoreCase("Emotions")) {
                                     array = face.getJSONArray(key);
                                 } else {
-                                    object = face.getJSONObject(key);
+                                    if  (!key.equalsIgnoreCase("Image")) {
+                                        object = face.getJSONObject(key);
+                                    }
                                 }
 
-                                if  (key.equalsIgnoreCase("Image")) {
-                                    currentFace.setImage(object.getString(key));
-                                } else if (key.equalsIgnoreCase("Age_range")) {
+                            if  (key.equalsIgnoreCase("Image")) {
+                                currentFace.setImage(face.getString(key));
+                            }else if (key.equalsIgnoreCase("Age_range")) {
                                     currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
                                 } else if (key.equalsIgnoreCase("Emotions")) {
                                     ArrayList<Feature> emotionList = new ArrayList<>();
@@ -694,12 +707,13 @@ public class MainActivity extends AppCompatActivity {
                                     features.setFeature(key);
                                     features.setConfidence(object.getDouble("Confidence"));
                                     features.setValue(String.valueOf(object.get("Value")));
-
                                     currentFace.getFeatureList().add(features);
                                 }
-                                listFace.add(currentFace);
+
                             }
 
+                            listFace.add(currentFace);
+                            Log.d("PARTY", listFace.toString());
                             Log.d(TAG, "onResponse: herhe");
                         }
 
@@ -707,6 +721,9 @@ public class MainActivity extends AppCompatActivity {
                         mainResponse.setFaces(listFace);
 //                        Toast.makeText(MainActivity.this, "success parsing", Toast.LENGTH_SHORT).show();
                         Intent resultIntent = new Intent(getApplicationContext(), ResultActivity.class);
+
+                        resultIntent.putExtra("KEY",response.body().toString());
+
                         startActivity(resultIntent);
 
                     } else {
@@ -725,6 +742,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     dialog.dismiss();
+                    Log.e(TAG, e.getMessage());
                     Toast.makeText(MainActivity.this, "Error parsing", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
