@@ -84,9 +84,7 @@ public class ResultActivity extends AppCompatActivity {
         //String encodedImage = getIntent().getExtras().getString("encoded_image");
         String encodedImage = sharedPreferences.getEncodedImage();
 
-//        recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), data);
-        recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+
 
         //Log.d(TAG, url_name);
 
@@ -229,6 +227,10 @@ public class ResultActivity extends AppCompatActivity {
             }
 
             mainResponse.setFaces(listFace);
+
+            recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
+            recyclerView.setAdapter(recyclerViewAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
         } catch (Exception e){
             e.printStackTrace();
