@@ -9,13 +9,16 @@ public class Feature {
     String feature;
     String value;
     double confidence;
+    String name;
+
 
     public Feature(){}
 
-    public Feature(String feature, String value, double confidence) {
+    public Feature(String feature, String value, double confidence,String name) {
         this.feature = feature;
         this.value = value;
         this.confidence = confidence;
+        this.name = name;
     }
 
     public String getFeature() {
@@ -40,5 +43,13 @@ public class Feature {
 
     public void setConfidence(double confidence) {
         this.confidence = confidence;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

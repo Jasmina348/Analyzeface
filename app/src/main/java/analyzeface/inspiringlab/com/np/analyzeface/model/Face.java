@@ -11,10 +11,11 @@ public class Face {
     String image;
     ArrayList<Feature> featureList;
     AgeRange ageRange;
-    ArrayList<Feature> emotions;
+   ArrayList<Emotion> emotionList;
 
     public Face() {
         featureList = new ArrayList<>();
+//        emotionList = new ArrayList<>();
     }
 
     public String getImage() {
@@ -41,11 +42,11 @@ public class Face {
         this.ageRange = ageRange;
     }
 
-    public ArrayList<Feature> getEmotions() {
-        return emotions;
+    public ArrayList<Emotion> getEmotion() {
+        return emotionList;
     }
 
-    public void setEmotions(ArrayList<Feature> emotions) {
-        this.emotions = emotions;
+    public void setEmotion(ArrayList<Emotion> emotionList) {
+        this.emotionList = emotionList;
     }
 }
