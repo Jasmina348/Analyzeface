@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -61,6 +62,8 @@ public class ResultActivity extends AppCompatActivity {
     AdView mAdView;
     RecyclerView recyclerView;
 
+    ImageView ivOriginalImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +72,7 @@ public class ResultActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.result_image);
         recyclerView=findViewById(R.id.recyclerView);
+        ivOriginalImage = findViewById(R.id.originalImage);
         //progressBar = findViewById(R.id.image_loading);
         //progressText = findViewById(R.id.progress_text);
 
@@ -226,8 +230,10 @@ public class ResultActivity extends AppCompatActivity {
                 listFace.add(currentFace);
             }
 
-            mainResponse.setFaces(listFace);
+            Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).into(ivOriginalImage);
 
+            mainResponse.setFaces(listFace);
+            Log.d(TAG, "loadValueFromIntent: main faces size" + mainResponse.getFaces().size());
             recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
             recyclerView.setAdapter(recyclerViewAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
