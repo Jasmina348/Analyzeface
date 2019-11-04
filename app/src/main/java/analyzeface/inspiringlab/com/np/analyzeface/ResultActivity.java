@@ -1,5 +1,6 @@
 package analyzeface.inspiringlab.com.np.analyzeface;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -56,6 +58,9 @@ public class ResultActivity extends AppCompatActivity {
     MySharedPreferences sharedPreferences;
     AdView mAdView;
     RecyclerView recyclerView;
+    Context context;
+    ImageView mainImage;
+    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         imageView = findViewById(R.id.result_image);
+        mainImage = findViewById(R.id.main_image);
         recyclerView=findViewById(R.id.recyclerView);
         //progressBar = findViewById(R.id.image_loading);
         //progressText = findViewById(R.id.progress_text);
@@ -142,7 +148,10 @@ public class ResultActivity extends AppCompatActivity {
 
 
         loadValueFromIntent();
+
     }
+
+
 
     private void loadValueFromIntent(){
         String response  = getIntent().getExtras().getString("analysis_result");
@@ -214,6 +223,7 @@ public class ResultActivity extends AppCompatActivity {
                         features.setFeature(key);
                         features.setConfidence(object.getDouble("Confidence"));
                         features.setValue(String.valueOf(object.get("Value")));
+                        features.setName(String.valueOf(object.get("Name")));
                         currentFace.getFeatureList().add(features);
                     }
 
@@ -223,16 +233,26 @@ public class ResultActivity extends AppCompatActivity {
             }
 
             mainResponse.setFaces(listFace);
+            if (this == null) {
+                return;
+            }
 
-            recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
-            recyclerView.setAdapter(recyclerViewAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+
+                recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
+                recyclerView.setAdapter(recyclerViewAdapter);
+                Log.d(TAG, "MainImage" + mainResponse.getImage());
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                Glide.with(context).load(imageName).into(mainImage);
+
 
         } catch (Exception e){
             e.printStackTrace();
         }
 
     }
+
+
+
 
     private void showDownloadNotification(){
         NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(this)
@@ -274,7 +294,7 @@ public class ResultActivity extends AppCompatActivity {
                 Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DCIM
                 ),
-                "WhatIsThis"
+                "AnalyzeFace"
         );
 
         String randName = "WIT_"+Long.toHexString(Double.doubleToLongBits(Math.random()))+".jpg";

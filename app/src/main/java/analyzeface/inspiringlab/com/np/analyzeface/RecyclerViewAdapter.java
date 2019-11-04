@@ -69,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TableLayout tv2;
         TextView high_value;
         TextView low_value;
-        ImageView mainImage;
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -78,7 +78,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv2 = (TableLayout) itemView.findViewById(R.id.emotionList);
             high_value = (TextView) itemView.findViewById(R.id.high_value);
             low_value = (TextView) itemView.findViewById(R.id.low_value);
-            mainImage = (ImageView) itemView.findViewById(R.id.image_id);
 
         }
 
@@ -107,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             featureName.setLayoutParams(params);
             featureValue.setLayoutParams(params);
 
-            featureName.setText(feature.getFeature());
+            featureName.setText(feature.getName());
             featureValue.setText(feature.getValue());
             Log.d("FEATURENAME", "" + feature.getFeature());
 
@@ -152,6 +151,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.tv2.addView(parent);
         }
     }
+
 
     }
 
