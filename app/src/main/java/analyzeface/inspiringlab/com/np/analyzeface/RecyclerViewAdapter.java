@@ -52,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        Glide.with(context).load(mainResponse.getImage()).into(holder.mainImage);
         Glide.with(context).load(Config.IMAGE_URL + faces.get(position).getImage()).into(holder.iv);
         setUpFeatureList(holder, position);
-        setUpEmotionList(holder, position);
+//        setUpEmotionList(holder, position);
         holder.high_value.setText(" "+faces.get(position).getAgeRange().getHigh());
         holder.low_value.setText(" "+faces.get(position).getAgeRange().getLow());
 
@@ -86,9 +86,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private void setUpFeatureList(RecyclerViewAdapter.MyViewHolder holder, int position) {
         int length = faces.get(position).getFeatureList().size();
         Log.d("FACELENGTH", "" + length);
+
         for (int i = 0; i < length; i++) {
             Feature feature = faces.get(position).getFeatureList().get(i);
-
 
             TableRow parent = new TableRow(context);
 

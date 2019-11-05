@@ -21,7 +21,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -61,6 +63,7 @@ public class ResultActivity extends AppCompatActivity {
     Context context;
     ImageView mainImage;
     private Activity mActivity;
+    private ProgressBar progressBar;
 
     ImageView ivOriginalImage;
 
@@ -69,6 +72,7 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_result);
+        progressBar = findViewById(R.id.progress_bar);
 
         imageView = findViewById(R.id.result_image);
         mainImage = findViewById(R.id.originalImage);
@@ -103,6 +107,7 @@ public class ResultActivity extends AppCompatActivity {
 //        imageView.setImageBitmap(bitmap);
 
         RelativeLayout rl_banner_ad = findViewById(R.id.result_banner_ad_view);
+        progressBar.setVisibility(View.VISIBLE);
         AdView mAdView = new AdView(ResultActivity.this);
         mAdView.setAdSize(AdSize.FULL_BANNER);
         mAdView.setAdUnitId(sharedPreferences.getRemoteconfig(Config.BANNER_AD_ID));
@@ -157,6 +162,7 @@ public class ResultActivity extends AppCompatActivity {
 
 
     private void loadValueFromIntent(){
+
         String response  = getIntent().getExtras().getString("analysis_result");
         try {
             JSONObject res = new JSONObject(response);
@@ -219,6 +225,7 @@ public class ResultActivity extends AppCompatActivity {
                             f.setConfidence(o.getInt("Confidence"));
 
                             emotionList.add(f);
+
                         }
                         currentFace.setEmotion(emotionList);
                     } else {
@@ -234,6 +241,7 @@ public class ResultActivity extends AppCompatActivity {
 
                 listFace.add(currentFace);
             }
+            hideProgressBar();
 
 //<<<<<<< HEAD
             Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).into(ivOriginalImage);
@@ -262,6 +270,9 @@ public class ResultActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
