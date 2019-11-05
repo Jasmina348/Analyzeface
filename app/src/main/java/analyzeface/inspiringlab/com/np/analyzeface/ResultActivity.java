@@ -1,5 +1,6 @@
 package analyzeface.inspiringlab.com.np.analyzeface;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -14,7 +15,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,20 +34,17 @@ import com.google.android.gms.ads.AdView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import analyzeface.inspiringlab.com.np.analyzeface.model.AgeRange;
+import analyzeface.inspiringlab.com.np.analyzeface.model.Emotion;
 import analyzeface.inspiringlab.com.np.analyzeface.model.Face;
 import analyzeface.inspiringlab.com.np.analyzeface.model.Feature;
 import analyzeface.inspiringlab.com.np.analyzeface.model.MainResponse;
-
-import static java.security.AccessController.getContext;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -61,6 +58,9 @@ public class ResultActivity extends AppCompatActivity {
     MySharedPreferences sharedPreferences;
     AdView mAdView;
     RecyclerView recyclerView;
+    Context context;
+    ImageView mainImage;
+    private Activity mActivity;
 
     ImageView ivOriginalImage;
 
@@ -71,6 +71,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         imageView = findViewById(R.id.result_image);
+        mainImage = findViewById(R.id.main_image);
         recyclerView=findViewById(R.id.recyclerView);
         ivOriginalImage = findViewById(R.id.originalImage);
         //progressBar = findViewById(R.id.image_loading);
@@ -150,21 +151,24 @@ public class ResultActivity extends AppCompatActivity {
 
 
         loadValueFromIntent();
+
     }
+
+
 
     private void loadValueFromIntent(){
         String response  = getIntent().getExtras().getString("analysis_result");
         try {
             JSONObject res = new JSONObject(response);
-
             Log.d(TAG, "loadValueFromIntent: " + response);
-
             JSONObject data = new JSONObject(res.getString("DATA"));
+
+
 
             String imageName = data.getString("image_id");
             MainResponse mainResponse = new MainResponse();
             mainResponse.setImage(imageName);
-
+            Log.d(TAG, "main image " + imageName);
 
             JSONObject details = data.getJSONObject("details");
             JSONArray faces =  details.getJSONArray("faces"); // list of faces
@@ -174,6 +178,7 @@ public class ResultActivity extends AppCompatActivity {
             JSONObject object;
             JSONArray array;
             Feature features;
+
 
 
 
@@ -201,27 +206,27 @@ public class ResultActivity extends AppCompatActivity {
                             object = face.getJSONObject(key);
                         }
                     }
-
                     if  (key.equalsIgnoreCase("Image")) {
                         currentFace.setImage(face.getString(key));
                     }else if (key.equalsIgnoreCase("Age_range")) {
                         currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
-                    } else if (key.equalsIgnoreCase("Emotions")) {
-                        ArrayList<Feature> emotionList = new ArrayList<>();
+                    }  else if (key.equalsIgnoreCase("Emotions")) {
+                        ArrayList<Emotion> emotionList = new ArrayList<>();
                         for (int j = 0; j < array.length(); j++) {
-                            JSONObject o = array.getJSONObject(i);
-                            Feature f = new Feature();
-                            f.setFeature(o.getString("Type"));
-                            f.setConfidence(o.getDouble("Confidence"));
+                            JSONObject o = array.getJSONObject(j);
+                            Emotion f = new Emotion();
+                            f.setType(o.getString("Type"));
+                            f.setConfidence(o.getInt("Confidence"));
 
                             emotionList.add(f);
                         }
-                        currentFace.setEmotions(emotionList);
+                        currentFace.setEmotion(emotionList);
                     } else {
                         // add feature to feature list
                         features.setFeature(key);
                         features.setConfidence(object.getDouble("Confidence"));
                         features.setValue(String.valueOf(object.get("Value")));
+                        features.setName(String.valueOf(object.get("Name")));
                         currentFace.getFeatureList().add(features);
                     }
 
@@ -230,6 +235,7 @@ public class ResultActivity extends AppCompatActivity {
                 listFace.add(currentFace);
             }
 
+<<<<<<< HEAD
             Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).into(ivOriginalImage);
 
             mainResponse.setFaces(listFace);
@@ -237,12 +243,29 @@ public class ResultActivity extends AppCompatActivity {
             recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
             recyclerView.setAdapter(recyclerViewAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+=======
+            mainResponse.setFaces(listFace);
+            if (this == null) {
+                return;
+            }
+
+
+                recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
+                recyclerView.setAdapter(recyclerViewAdapter);
+                Log.d(TAG, "MainImage" + mainResponse.getImage());
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                Glide.with(context).load(imageName).into(mainImage);
+
+>>>>>>> 1d01b27698398c5a428be08facf9bd9b78c9b6b0
 
         } catch (Exception e){
             e.printStackTrace();
         }
 
     }
+
+
+
 
     private void showDownloadNotification(){
         NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(this)
@@ -284,7 +307,7 @@ public class ResultActivity extends AppCompatActivity {
                 Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DCIM
                 ),
-                "WhatIsThis"
+                "AnalyzeFace"
         );
 
         String randName = "WIT_"+Long.toHexString(Double.doubleToLongBits(Math.random()))+".jpg";
