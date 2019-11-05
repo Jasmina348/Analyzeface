@@ -71,7 +71,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         imageView = findViewById(R.id.result_image);
-        mainImage = findViewById(R.id.main_image);
+        mainImage = findViewById(R.id.originalImage);
         recyclerView=findViewById(R.id.recyclerView);
         ivOriginalImage = findViewById(R.id.originalImage);
         //progressBar = findViewById(R.id.image_loading);
@@ -235,7 +235,7 @@ public class ResultActivity extends AppCompatActivity {
                 listFace.add(currentFace);
             }
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
             Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).into(ivOriginalImage);
 
             mainResponse.setFaces(listFace);
@@ -243,20 +243,20 @@ public class ResultActivity extends AppCompatActivity {
             recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
             recyclerView.setAdapter(recyclerViewAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-=======
-            mainResponse.setFaces(listFace);
-            if (this == null) {
-                return;
-            }
-
-
-                recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
-                recyclerView.setAdapter(recyclerViewAdapter);
-                Log.d(TAG, "MainImage" + mainResponse.getImage());
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-                Glide.with(context).load(imageName).into(mainImage);
-
->>>>>>> 1d01b27698398c5a428be08facf9bd9b78c9b6b0
+//=======
+//            mainResponse.setFaces(listFace);
+//            if (this == null) {
+//                return;
+//            }
+//
+//
+//                recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
+//                recyclerView.setAdapter(recyclerViewAdapter);
+//                Log.d(TAG, "MainImage" + mainResponse.getImage());
+//                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+//                Glide.with(context).load(imageName).into(mainImage);
+//
+//>>>>>>> 1d01b27698398c5a428be08facf9bd9b78c9b6b0
 
         } catch (Exception e){
             e.printStackTrace();

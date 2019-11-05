@@ -10,15 +10,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="analyzeface.inspiringlab.com.np.analyzeface.ResultActivity">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/main_image"/>
+
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:id="@+id/main_image"/>-->
 
     <ImageView
         android:id="@+id/originalImage"
@@ -32,7 +29,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-<<<<<<< HEAD
         android:layout_height="fill_parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -45,8 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
-
-
 
 
 </android.support.constraint.ConstraintLayout>
@@ -103,24 +97,24 @@
     <!--&lt;!&ndash;            android:layout_centerHorizontal="true" />&ndash;&gt;-->
     <!--&lt;!&ndash;    </RelativeLayout>&ndash;&gt;-->
     <!--</RelativeLayout>-->
-=======
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="15dp"/>
-    </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp">
+<!--        android:layout_height="wrap_content"-->
+<!--        android:padding="10dp"-->
+<!--        android:layout_marginTop="15dp"/>-->
+<!--    </LinearLayout>-->
 
-        <RelativeLayout
-            android:id="@+id/result_banner_ad_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-</RelativeLayout>
->>>>>>> 1d01b27698398c5a428be08facf9bd9b78c9b6b0
+<!--    <RelativeLayout-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginBottom="16dp">-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/result_banner_ad_view"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_centerHorizontal="true" />-->
+<!--    </RelativeLayout>-->
+<!--</RelativeLayout>-->
+
