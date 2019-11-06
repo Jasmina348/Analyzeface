@@ -52,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        Glide.with(context).load(mainResponse.getImage()).into(holder.mainImage);
         Glide.with(context).load(Config.IMAGE_URL + faces.get(position).getImage()).into(holder.iv);
         setUpFeatureList(holder, position);
-//        setUpEmotionList(holder, position);
+        setUpEmotionList(holder, position);
         holder.high_value.setText(" "+faces.get(position).getAgeRange().getHigh());
         holder.low_value.setText(" "+faces.get(position).getAgeRange().getLow());
 

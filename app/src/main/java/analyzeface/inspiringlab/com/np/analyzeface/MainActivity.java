@@ -13,7 +13,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -63,6 +65,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -523,8 +526,12 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+
+
                 // by this point we have the camera photo on disk
                 File photoFile = getPhotoFileUri("photo.jpg");
+                Uri tempUri = Uri.fromFile(photoFile);
+
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 Display display = getWindowManager(). getDefaultDisplay();
                 Point size = new Point();
@@ -534,7 +541,8 @@ public class MainActivity extends AppCompatActivity {
                 if(width >= height){
                     takenImage = Bitmap.createScaledBitmap(takenImage, width, height, false);
                 }
-                takenImage = getResizedBitmap(takenImage, 500);
+                takenImage = getResizedBitmap(takenImage, 500,tempUri);
+//                takenImage = rotateImageIfRequired(takenImage,width,height,tempUri);
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 //ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
@@ -568,26 +576,110 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     /**
      * reduces the size of the image
      * param image bitmap received from camera
      * @param maxSize
      * @return
      */
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize,Uri tempUri) {
         int width = image.getWidth();
         int height = image.getHeight();
+        double x;
 
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 0) {
+        if (width >= height && width > maxSize) {
+            x = width / height;
             width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
+            height = (int) (maxSize / x);
+        } else if (height >= width && height > maxSize) {
+            x = height / width;
             height = maxSize;
-            width = (int) (height * bitmapRatio);
+            width = (int) (maxSize / x);
         }
-        return Bitmap.createScaledBitmap(image, width, height, true);
+
+//        float bitmapRatio = (float)width / (float) height;
+//        if (bitmapRatio > 0) {
+//            width = maxSize;
+//            height = (int) (width / bitmapRatio);
+//        } else {
+//            height = maxSize;
+//            width = (int) (height * bitmapRatio);
+////            width= width *1 ;
+//        }
+
+        ExifInterface ei = null;
+        try {
+            ei = new ExifInterface(tempUri.getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        Bitmap rotatedBitmap = null;
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitmap = rotateImage(image, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitmap = rotateImage(image, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitmap = rotateImage(image, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitmap = image;
+        }
+        return Bitmap.createScaledBitmap(rotatedBitmap, width, height, true);
+
     }
+    private Bitmap rotateImageIfRequired(Bitmap image,int width,int height, Uri tempUri){
+        ExifInterface ei = null;
+        try {
+            ei = new ExifInterface(tempUri.getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        Bitmap rotatedBitmap = null;
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitmap = rotateImage(image, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitmap = rotateImage(image, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitmap = rotateImage(image, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitmap = image;
+        }
+        return Bitmap.createScaledBitmap(rotatedBitmap, width, height, true);
+
+    }
+
+    private static Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
+    }
+
 
 
     public static byte[] convertIntoBytes(Bitmap bitmap){

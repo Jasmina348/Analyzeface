@@ -218,15 +218,31 @@ public class ResultActivity extends AppCompatActivity {
                         currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
                     }  else if (key.equalsIgnoreCase("Emotions")) {
                         ArrayList<Emotion> emotionList = new ArrayList<>();
+//                        int max = -1;
+//                        String emotion = "";
                         for (int j = 0; j < array.length(); j++) {
                             JSONObject o = array.getJSONObject(j);
+//                            if(o.getInt("Confidence") > max) {
+//                                max = o.getInt("Confidence");
+//                                emotion = o.getString("Type");
+//                            }
+//
+//                           Log.e("Max", "" + max);
                             Emotion f = new Emotion();
                             f.setType(o.getString("Type"));
                             f.setConfidence(o.getInt("Confidence"));
 
                             emotionList.add(f);
 
+
+
                         }
+//                        Emotion f = new Emotion();
+//                        f.setType(emotion);
+//                        f.setConfidence(max);
+//
+//                        emotionList.add(f);
+
                         currentFace.setEmotion(emotionList);
                     } else {
                         // add feature to feature list
