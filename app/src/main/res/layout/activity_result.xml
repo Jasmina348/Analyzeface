@@ -5,17 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="analyzeface.inspiringlab.com.np.analyzeface.ResultActivity">
-
-
-<!--    <ImageView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:id="@+id/main_image"/>-->
 
     <ImageView
         android:id="@+id/originalImage"
@@ -24,15 +14,40 @@
         android:layout_alignParentTop="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_faces_recognized"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="2dp"
+        android:text="Faces Recognized"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/originalImage" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/originalImage" />
+        app:layout_constraintTop_toBottomOf="@id/tv_faces_recognized" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+
+        <include
+            android:id="@+id/info"
+            layout="@layout/info_view" />
+    </android.support.v7.widget.CardView>
+
 
     <RelativeLayout
         android:id="@+id/result_banner_ad_view"
@@ -42,89 +57,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/originalImage"
+        app:layout_constraintBottom_toTopOf="@id/activity_main"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/activity_main"/>
+        app:layout_constraintTop_toBottomOf="@id/originalImage" />
 
 
 </android.support.constraint.ConstraintLayout>
 
 
-    <!--    <?xml version="1.0" encoding="utf-8"?>-->
-    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/activity_main"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
-    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
-    <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
-    <!--tools:context="analyzeface.inspiringlab.com.np.analyzeface.ResultActivity">-->
-
-
-    <!--<ImageView-->
-    <!--    android:id="@+id/originalImage"-->
-    <!--    android:layout_width="wrap_content"-->
-    <!--    android:layout_height="100dp"-->
-    <!--    android:layout_alignParentTop="true">-->
-
-    <!--</ImageView>-->
-
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--    android:id="@+id/recyclerView"-->
-    <!--    android:layout_alignBottom="@id/originalImage"-->
-    <!--    android:layout_alignTop="@id/result_banner_ad_view"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="fill_parent"-->
-    <!--    />-->
-
-
-    <!--<RelativeLayout-->
-    <!--    android:id="@+id/result_banner_ad_view"-->
-    <!--    android:layout_width="wrap_content"-->
-    <!--    android:layout_height="wrap_content"-->
-    <!--    android:layout_alignParentBottom="true"-->
-    <!--    android:layout_centerHorizontal="true" />-->
-
-    <!--&lt;!&ndash;    <RelativeLayout&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_width="fill_parent"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_height="match_parent"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_alignParentBottom="true">&ndash;&gt;-->
-
-    <!--&lt;!&ndash;        <RelativeLayout&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:id="@+id/result_banner_ad_view"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_alignParentBottom="true"&ndash;&gt;-->
-    <!--&lt;!&ndash;            android:layout_centerHorizontal="true" />&ndash;&gt;-->
-    <!--&lt;!&ndash;    </RelativeLayout>&ndash;&gt;-->
-    <!--</RelativeLayout>-->
-
-<!--        android:layout_height="wrap_content"-->
-<!--        android:padding="10dp"-->
-<!--        android:layout_marginTop="15dp"/>-->
-<!--    </LinearLayout>-->
-
-<!--    <RelativeLayout-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginBottom="16dp">-->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/result_banner_ad_view"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_centerHorizontal="true" />-->
-<!--    </RelativeLayout>-->
-<!--</RelativeLayout>-->
 

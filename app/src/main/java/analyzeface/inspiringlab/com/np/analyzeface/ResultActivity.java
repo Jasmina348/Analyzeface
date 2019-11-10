@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +40,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -56,7 +58,7 @@ public class ResultActivity extends AppCompatActivity {
     private float mScaleFactor = 1.0f;
     RecyclerViewAdapter recyclerViewAdapter;
 
-    ImageView imageView;
+    ImageView ivResultImage;
     MySharedPreferences sharedPreferences;
     AdView mAdView;
     RecyclerView recyclerView;
@@ -64,6 +66,10 @@ public class ResultActivity extends AppCompatActivity {
     ImageView mainImage;
     private Activity mActivity;
     private ProgressBar progressBar;
+    private TextView tv_agerange;
+
+    RelativeLayout rl_gender_male, rl_gender_female;
+
 
     ImageView ivOriginalImage;
 
@@ -74,10 +80,16 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
         progressBar = findViewById(R.id.progress_bar);
 
-        imageView = findViewById(R.id.result_image);
+        ivResultImage = findViewById(R.id.result_image);
         mainImage = findViewById(R.id.originalImage);
         recyclerView=findViewById(R.id.recyclerView);
         ivOriginalImage = findViewById(R.id.originalImage);
+        tv_agerange = findViewById(R.id.tv_agerange);
+
+        rl_gender_female = findViewById(R.id.rl_gender_female);
+        rl_gender_male = findViewById(R.id.rl_gender_male);
+
+
         //progressBar = findViewById(R.id.image_loading);
         //progressText = findViewById(R.id.progress_text);
 
@@ -257,33 +269,37 @@ public class ResultActivity extends AppCompatActivity {
 
                 listFace.add(currentFace);
             }
-            hideProgressBar();
-
-//<<<<<<< HEAD
             Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).into(ivOriginalImage);
 
             mainResponse.setFaces(listFace);
             Log.d(TAG, "loadValueFromIntent: main faces size" + mainResponse.getFaces().size());
-            recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
+            recyclerViewAdapter = new RecyclerViewAdapter(ResultActivity.this, mainResponse.getFaces());
             recyclerView.setAdapter(recyclerViewAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-//=======
-//            mainResponse.setFaces(listFace);
-//            if (this == null) {
-//                return;
-//            }
-//
-//
-//                recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), mainResponse.getFaces());
-//                recyclerView.setAdapter(recyclerViewAdapter);
-//                Log.d(TAG, "MainImage" + mainResponse.getImage());
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-//                Glide.with(context).load(imageName).into(mainImage);
-//
-//>>>>>>> 1d01b27698398c5a428be08facf9bd9b78c9b6b0
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
         } catch (Exception e){
             e.printStackTrace();
+        }
+
+    }
+    public void setUpFacesInfromation(Face face){
+        Glide.with(this).load(Config.IMAGE_URL + face.getImage()).into(ivResultImage);
+        Log.d(TAG,"face image" + Config.IMAGE_URL + face.getImage());
+        tv_agerange.setText(face.getAgeRange().getLow()+"-"+face.getAgeRange().getHigh());
+
+        ArrayList<Feature> featureList = face.getFeatureList();
+
+        for(Feature feature: featureList){
+            if(feature.getFeature().equalsIgnoreCase("Gender")){
+                String gender = feature.getValue();
+                if(gender.equalsIgnoreCase("male")){
+                    rl_gender_male.setVisibility(View.VISIBLE);
+                    rl_gender_female.setVisibility(View.GONE);
+                }else{
+                    rl_gender_male.setVisibility(View.GONE);
+                    rl_gender_female.setVisibility(View.VISIBLE);
+                }
+            }
         }
 
     }
@@ -326,8 +342,8 @@ public class ResultActivity extends AppCompatActivity {
 
     private void saveImage(){
         Log.d("SAVEIMAGE","called");
-        imageView.buildDrawingCache();
-        Bitmap bmp=imageView.getDrawingCache();
+        ivResultImage.buildDrawingCache();
+        Bitmap bmp=ivResultImage.getDrawingCache();
 
         OutputStream fOut = null;
         File root = new File(
@@ -423,9 +439,9 @@ public class ResultActivity extends AppCompatActivity {
             mScaleFactor *= scaleGestureDetector.getScaleFactor();
             mScaleFactor = Math.max(0.1f,
                     Math.min(mScaleFactor, 10.0f));
-            imageView.setScaleX(mScaleFactor);
+            ivResultImage.setScaleX(mScaleFactor);
             //scrollView.setScaleX(mScaleFactor);
-            imageView.setScaleY(mScaleFactor);
+            ivResultImage.setScaleY(mScaleFactor);
             //scrollView.setScaleY(mScaleFactor);
             return true;
         }

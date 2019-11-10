@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -40,21 +41,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.card_recycler_view, parent, false);
+        View view = inflater.inflate(R.layout.faces_image_view, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
 
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerViewAdapter.MyViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: " + faces.get(position).getImage());
 //        Glide.with(context).load(mainResponse.getImage()).into(holder.mainImage);
-        Glide.with(context).load(Config.IMAGE_URL + faces.get(position).getImage()).into(holder.iv);
-        setUpFeatureList(holder, position);
-        setUpEmotionList(holder, position);
-        holder.high_value.setText(" "+faces.get(position).getAgeRange().getHigh());
-        holder.low_value.setText(" "+faces.get(position).getAgeRange().getLow());
+        Glide.with(context).load(Config.IMAGE_URL + faces.get(position).getImage()).into(holder.iv_faces_image);
+        holder.iv_faces_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
+                    ((ResultActivity)context).setUpFacesInfromation(faces.get(position));
+            }
+        });
+//        setUpFeatureList(holder, position);
+//        setUpEmotionList(holder, position);
+//        holder.high_value.setText(" "+faces.get(position).getAgeRange().getHigh());
+//        holder.low_value.setText(" "+faces.get(position).getAgeRange().getLow());
 
     }
 
@@ -69,6 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TableLayout tv2;
         TextView high_value;
         TextView low_value;
+        ImageView iv_faces_image;
 
 
         public MyViewHolder(View itemView) {
@@ -78,6 +87,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv2 = (TableLayout) itemView.findViewById(R.id.emotionList);
             high_value = (TextView) itemView.findViewById(R.id.high_value);
             low_value = (TextView) itemView.findViewById(R.id.low_value);
+            iv_faces_image= (ImageView) itemView.findViewById(R.id.iv_faces_image);
 
         }
 

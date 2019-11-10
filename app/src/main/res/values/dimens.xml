@@ -2,4 +2,10 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">5dp</dimen>
+    <dimen name="rl_paddingtop">20dp</dimen>
+    <dimen name="rl_paddingleft">20dp</dimen>
+    <dimen name="rl_paddingright">20dp</dimen>
+    <dimen name="rl_paddingtbottom">10dp</dimen>
+    <dimen name="info_image">30dp</dimen>
+
 </resources>
