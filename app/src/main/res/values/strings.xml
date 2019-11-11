@@ -113,4 +113,19 @@ THE REAL LICENSE:\n\n
     <string name="about_us">
         Formally established on November, 2014, Inspiring Lab was an initiation of a group of aspired students belonging to technical as well as non- technical background. The main motto of our organization is “LET’s INSPIRE”, inspiration towards development through technology. We work to develop products based on research. We are currently working to devise intelligent application and tools related to Nepali Language, Universal Nepali Character Recognition Engine, Chatbot and many more.
     </string>
+    <string name="no_mustache">No Mustache</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="beard">Beard</string>
+    <string name="no_beard">No Beard</string>
+    <string name="mustache">Mustache</string>
+    <string name="eye_opened">Eye Opened</string>
+    <string name="eye_closed">Eye Closed</string>
+    <string name="sunglass">Sunglass</string>
+    <string name="eyeglass">Eyeglass</string>
+    <string name="no_eyeglass">No Eyeglass</string>
+    <string name="mouth_open">Mouth Open</string>
+    <string name="mouth_closed">Mouth Closed</string>
+    <string name="smiling">Smiling</string>
+    <string name="not_smiling">Not Smiling</string>
 </resources>

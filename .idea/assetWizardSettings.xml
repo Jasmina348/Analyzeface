@@ -73,8 +73,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_confused" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/../Downloads/confused.svg" />
+                            <entry key="outputName" value="ic_no_eyeglass" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/../Downloads/no_eyeglass.svg" />
                           </map>
                         </option>
                       </PersistentState>

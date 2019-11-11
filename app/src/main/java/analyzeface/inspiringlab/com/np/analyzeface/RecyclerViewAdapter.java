@@ -55,8 +55,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.iv_faces_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
+//               Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
                     ((ResultActivity)context).setUpFacesInfromation(faces.get(position));
+                ((ResultActivity)context).setUpEmotionInformation(faces.get(position));
             }
         });
 //        setUpFeatureList(holder, position);

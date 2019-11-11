@@ -68,8 +68,8 @@ public class ResultActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tv_agerange;
 
-    RelativeLayout rl_gender_male, rl_gender_female;
-
+    RelativeLayout rl_gender_male, rl_gender_female, rl_mustache, rl_no_mustache, rl_beard, rl_no_beard, rl_eye_opened, rl_eye_closed, rl_sunglass, rl_eyeglass, rl_no_eye_glass, rl_mouth_open, rl_mouth_close, rl_smiling, rl_not_smiling;
+    TextView tv_calm_value, tv_angry_value, tv_sad_value, tv_confused_value, tv_happy_value, tv_surprised_value, tv_disgusted_value, tv_fear_value;
 
     ImageView ivOriginalImage;
 
@@ -82,12 +82,33 @@ public class ResultActivity extends AppCompatActivity {
 
         ivResultImage = findViewById(R.id.result_image);
         mainImage = findViewById(R.id.originalImage);
-        recyclerView=findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         ivOriginalImage = findViewById(R.id.originalImage);
         tv_agerange = findViewById(R.id.tv_agerange);
 
         rl_gender_female = findViewById(R.id.rl_gender_female);
         rl_gender_male = findViewById(R.id.rl_gender_male);
+        rl_mustache = findViewById(R.id.rl_mustache);
+        rl_no_mustache = findViewById(R.id.rl_no_mustache);
+        rl_beard = findViewById(R.id.rl_beard);
+        rl_no_beard = findViewById(R.id.rl_no_beard);
+        rl_eye_opened = findViewById(R.id.rl_eye_opened);
+        rl_eye_closed = findViewById(R.id.rl_eye_closed);
+        rl_sunglass = findViewById(R.id.rl_sunglass);
+        rl_eyeglass = findViewById(R.id.rl_eye_glass);
+        rl_no_eye_glass = findViewById(R.id.rl_no_eye_glass);
+        rl_mouth_open = findViewById(R.id.rl_mouth_open);
+        rl_mouth_close = findViewById(R.id.rl_mouth_closed);
+        rl_smiling = findViewById(R.id.rl_smiling);
+        rl_not_smiling = findViewById(R.id.rl_not_smiling);
+        tv_calm_value = findViewById(R.id.tv_calm_value);
+        tv_angry_value = findViewById(R.id.tv_angry_vlaue);
+        tv_sad_value = findViewById(R.id.tv_sad_value);
+        tv_confused_value = findViewById(R.id.tv_confused_value);
+        tv_happy_value = findViewById(R.id.tv_happy_value);
+        tv_surprised_value = findViewById(R.id.tv_surprised_value);
+        tv_disgusted_value = findViewById(R.id.tv_disgusted_value);
+        tv_fear_value = findViewById(R.id.tv_fear_value);
 
 
         //progressBar = findViewById(R.id.image_loading);
@@ -104,7 +125,6 @@ public class ResultActivity extends AppCompatActivity {
         //String url_name = getIntent().getExtras().getString("url_name");
         //String encodedImage = getIntent().getExtras().getString("encoded_image");
         String encodedImage = sharedPreferences.getEncodedImage();
-
 
 
         //Log.d(TAG, url_name);
@@ -172,15 +192,13 @@ public class ResultActivity extends AppCompatActivity {
     }
 
 
+    private void loadValueFromIntent() {
 
-    private void loadValueFromIntent(){
-
-        String response  = getIntent().getExtras().getString("analysis_result");
+        String response = getIntent().getExtras().getString("analysis_result");
         try {
             JSONObject res = new JSONObject(response);
             Log.d(TAG, "loadValueFromIntent: " + response);
             JSONObject data = new JSONObject(res.getString("DATA"));
-
 
 
             String imageName = data.getString("image_id");
@@ -189,7 +207,7 @@ public class ResultActivity extends AppCompatActivity {
             Log.d(TAG, "main image " + imageName);
 
             JSONObject details = data.getJSONObject("details");
-            JSONArray faces =  details.getJSONArray("faces"); // list of faces
+            JSONArray faces = details.getJSONArray("faces"); // list of faces
 
             ArrayList<Face> listFace = new ArrayList<>(); // parse list of faces
             Face currentFace;
@@ -198,37 +216,35 @@ public class ResultActivity extends AppCompatActivity {
             Feature features;
 
 
-
-
             for (int i = 0; i < faces.length(); i++) {
                 JSONObject face = faces.getJSONObject(i);
                 Iterator<String> keys = face.keys();
 
                 currentFace = new Face();
 
-                while(keys.hasNext()) {
+                while (keys.hasNext()) {
                     /**
                      * key value pairs
                      * distinct for emotion, image and age_range
                      */
                     object = new JSONObject();
                     array = new JSONArray();
-                    features =  new Feature();
+                    features = new Feature();
 
                     String key = keys.next();
 
-                    if  (key.equalsIgnoreCase("Emotions")) {
+                    if (key.equalsIgnoreCase("Emotions")) {
                         array = face.getJSONArray(key);
                     } else {
-                        if  (!key.equalsIgnoreCase("Image")) {
+                        if (!key.equalsIgnoreCase("Image")) {
                             object = face.getJSONObject(key);
                         }
                     }
-                    if  (key.equalsIgnoreCase("Image")) {
+                    if (key.equalsIgnoreCase("Image")) {
                         currentFace.setImage(face.getString(key));
-                    }else if (key.equalsIgnoreCase("Age_range")) {
+                    } else if (key.equalsIgnoreCase("Age_range")) {
                         currentFace.setAgeRange(new AgeRange(object.getInt("Low"), object.getInt("High")));
-                    }  else if (key.equalsIgnoreCase("Emotions")) {
+                    } else if (key.equalsIgnoreCase("Emotions")) {
                         ArrayList<Emotion> emotionList = new ArrayList<>();
 //                        int max = -1;
 //                        String emotion = "";
@@ -245,7 +261,6 @@ public class ResultActivity extends AppCompatActivity {
                             f.setConfidence(o.getInt("Confidence"));
 
                             emotionList.add(f);
-
 
 
                         }
@@ -277,41 +292,157 @@ public class ResultActivity extends AppCompatActivity {
             recyclerView.setAdapter(recyclerViewAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    public void setUpFacesInfromation(Face face){
+
+
+    public void setUpFacesInfromation(Face face) {
         Glide.with(this).load(Config.IMAGE_URL + face.getImage()).into(ivResultImage);
-        Log.d(TAG,"face image" + Config.IMAGE_URL + face.getImage());
-        tv_agerange.setText(face.getAgeRange().getLow()+"-"+face.getAgeRange().getHigh());
+        Log.d(TAG, "face image" + Config.IMAGE_URL + face.getImage());
+        tv_agerange.setText(face.getAgeRange().getLow() + "-" + face.getAgeRange().getHigh());
 
         ArrayList<Feature> featureList = face.getFeatureList();
 
-        for(Feature feature: featureList){
-            if(feature.getFeature().equalsIgnoreCase("Gender")){
+        for (Feature feature : featureList) {
+            if (feature.getFeature().equalsIgnoreCase("Gender")) {
                 String gender = feature.getValue();
-                if(gender.equalsIgnoreCase("male")){
+                if (gender.equalsIgnoreCase("male")) {
                     rl_gender_male.setVisibility(View.VISIBLE);
                     rl_gender_female.setVisibility(View.GONE);
-                }else{
+                } else {
                     rl_gender_male.setVisibility(View.GONE);
                     rl_gender_female.setVisibility(View.VISIBLE);
                 }
             }
+            if (feature.getFeature().equalsIgnoreCase("Mustache")) {
+                String mustache = feature.getValue();
+                if (mustache.equalsIgnoreCase("true")) {
+                    rl_mustache.setVisibility(View.VISIBLE);
+                    rl_no_mustache.setVisibility(View.GONE);
+                } else {
+                    rl_mustache.setVisibility(View.GONE);
+                    rl_no_mustache.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Beard")) {
+                String beard = feature.getValue();
+                if (beard.equalsIgnoreCase("true")) {
+                    rl_beard.setVisibility(View.VISIBLE);
+                    rl_no_beard.setVisibility(View.GONE);
+                } else {
+                    rl_beard.setVisibility(View.GONE);
+                    rl_no_beard.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Eyes_open")) {
+                String eyes_open = feature.getValue();
+                if (eyes_open.equalsIgnoreCase("true")) {
+                    rl_eye_opened.setVisibility(View.VISIBLE);
+                    rl_eye_closed.setVisibility(View.GONE);
+                } else {
+                    rl_eye_opened.setVisibility(View.GONE);
+                    rl_eye_closed.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Sunglasses")) {
+                String sunglasses = feature.getValue();
+                if (sunglasses.equalsIgnoreCase("true")) {
+                    rl_sunglass.setVisibility(View.VISIBLE);
+                    rl_eyeglass.setVisibility(View.GONE);
+                    rl_no_eye_glass.setVisibility(View.GONE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Eyeglasses")) {
+                String eyeglasses = feature.getValue();
+                if (eyeglasses.equalsIgnoreCase("true")) {
+                    rl_eyeglass.setVisibility(View.VISIBLE);
+                    rl_sunglass.setVisibility(View.GONE);
+                    rl_no_eye_glass.setVisibility(View.GONE);
+                } else {
+                    rl_eyeglass.setVisibility(View.GONE);
+                    rl_sunglass.setVisibility(View.GONE);
+                    rl_no_eye_glass.setVisibility(View.VISIBLE);
+
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Mouth_open")) {
+                String mouth_open = feature.getValue();
+                if (mouth_open.equalsIgnoreCase("true")) {
+                    rl_mouth_open.setVisibility(View.VISIBLE);
+                    rl_mouth_close.setVisibility(View.GONE);
+                } else {
+                    rl_mouth_open.setVisibility(View.GONE);
+                    rl_mouth_close.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Smile")) {
+                String mouth_open = feature.getValue();
+                if (mouth_open.equalsIgnoreCase("true")) {
+                    rl_smiling.setVisibility(View.VISIBLE);
+                    rl_not_smiling.setVisibility(View.GONE);
+                } else {
+                    rl_smiling.setVisibility(View.GONE);
+                    rl_not_smiling.setVisibility(View.VISIBLE);
+                }
+            }
+
+
         }
 
     }
+
+    public void setUpEmotionInformation(Face face) {
+        ArrayList<Emotion> emotionList = face.getEmotion();
+        for (Emotion emotion : emotionList) {
+            if (emotion.getType().equalsIgnoreCase("CALM")) {
+                int calm = emotion.getConfidence();
+                tv_calm_value.setText(calm +"%");
+            }
+
+            if (emotion.getType().equalsIgnoreCase("ANGRY")) {
+                int angry = emotion.getConfidence();
+                tv_angry_value.setText(angry+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("SAD")) {
+                int sad = emotion.getConfidence();
+                tv_sad_value.setText(sad+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("CONFUSED")) {
+                int confused = emotion.getConfidence();
+                tv_confused_value.setText(confused+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("HAPPY")) {
+                int happy = emotion.getConfidence();
+                tv_happy_value.setText(happy+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("SURPRISED")) {
+                int surprised = emotion.getConfidence();
+                tv_surprised_value.setText(surprised+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("DISGUSTED")) {
+                int disgusted = emotion.getConfidence();
+                tv_angry_value.setText(disgusted+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("FEAR")) {
+                int fear = emotion.getConfidence();
+                tv_fear_value.setText(fear+"%");
+            }
+
+        }
+
+
+    }
+
     private void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
 
-
-
-    private void showDownloadNotification(){
-        NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(this)
+    private void showDownloadNotification() {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher_round) // notification icon
                 .setContentTitle("Download successful!") // title for notification
                 .setContentText("Click to open gallery") // message for notification
@@ -332,7 +463,7 @@ public class ResultActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //startActivity(intent);
 
-        PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
         mBuilder.setContentIntent(pi);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -340,10 +471,10 @@ public class ResultActivity extends AppCompatActivity {
     }
 
 
-    private void saveImage(){
-        Log.d("SAVEIMAGE","called");
+    private void saveImage() {
+        Log.d("SAVEIMAGE", "called");
         ivResultImage.buildDrawingCache();
-        Bitmap bmp=ivResultImage.getDrawingCache();
+        Bitmap bmp = ivResultImage.getDrawingCache();
 
         OutputStream fOut = null;
         File root = new File(
@@ -353,7 +484,7 @@ public class ResultActivity extends AppCompatActivity {
                 "AnalyzeFace"
         );
 
-        String randName = "WIT_"+Long.toHexString(Double.doubleToLongBits(Math.random()))+".jpg";
+        String randName = "WIT_" + Long.toHexString(Double.doubleToLongBits(Math.random())) + ".jpg";
 
         //Uri outputFileUri;
         try {
@@ -392,16 +523,16 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
-    private String rotateImage(int degree, String imagePath){
+    private String rotateImage(int degree, String imagePath) {
 
-        if(degree<=0){
+        if (degree <= 0) {
             return imagePath;
         }
-        try{
-            Bitmap b= BitmapFactory.decodeFile(imagePath);
+        try {
+            Bitmap b = BitmapFactory.decodeFile(imagePath);
 
             Matrix matrix = new Matrix();
-            if(b.getWidth()>b.getHeight()){
+            if (b.getWidth() > b.getHeight()) {
                 matrix.setRotate(degree);
                 b = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(),
                         matrix, true);
@@ -414,14 +545,14 @@ public class ResultActivity extends AppCompatActivity {
             FileOutputStream out = new FileOutputStream(imagePath);
             if (imageType.equalsIgnoreCase("png")) {
                 b.compress(Bitmap.CompressFormat.PNG, 100, out);
-            }else if (imageType.equalsIgnoreCase("jpeg")|| imageType.equalsIgnoreCase("jpg")) {
+            } else if (imageType.equalsIgnoreCase("jpeg") || imageType.equalsIgnoreCase("jpg")) {
                 b.compress(Bitmap.CompressFormat.JPEG, 100, out);
             }
             fOut.flush();
             fOut.close();
 
             b.recycle();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return imagePath;
@@ -435,7 +566,7 @@ public class ResultActivity extends AppCompatActivity {
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
-        public boolean onScale(ScaleGestureDetector scaleGestureDetector){
+        public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
             mScaleFactor *= scaleGestureDetector.getScaleFactor();
             mScaleFactor = Math.max(0.1f,
                     Math.min(mScaleFactor, 10.0f));
@@ -448,7 +579,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }

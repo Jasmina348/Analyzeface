@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
+
     <TextView
+        style="@style/text_style"
+        android:text="Emotions" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Emotions"
-        android:textStyle="bold"/>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_calm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_calm"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_calm" />
+
             <TextView
                 android:id="@+id/tv_calm"
                 android:layout_width="wrap_content"
@@ -35,22 +38,34 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="CALM" />
+
+            <TextView
+                android:id="@+id/tv_calm_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_calm"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_angry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_angry"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_angry" />
+
             <TextView
                 android:id="@+id/tv_angry"
                 android:layout_width="wrap_content"
@@ -59,21 +74,35 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="ANGRY" />
+
+            <TextView
+                android:id="@+id/tv_angry_vlaue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_angry"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
+
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_sad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_sad"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_sad" />
+
             <TextView
                 android:id="@+id/tv_sad"
                 android:layout_width="wrap_content"
@@ -82,21 +111,34 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="SAD" />
+
+            <TextView
+                android:id="@+id/tv_sad_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_sad"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_confused"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_confused"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_confused" />
+
             <TextView
                 android:id="@+id/tv_confused"
                 android:layout_width="wrap_content"
@@ -105,25 +147,40 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="CONFUSED" />
+
+            <TextView
+                android:id="@+id/tv_confused_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_confused"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
-    </TableRow>
-    <TableRow
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_happy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_happy"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_happy" />
+
             <TextView
                 android:id="@+id/tv_happy"
                 android:layout_width="wrap_content"
@@ -132,68 +189,106 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="HAPPY" />
+
+            <TextView
+                android:id="@+id/tv_happy_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_happy"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_surprised"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_sunglass"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_surprised" />
+
             <TextView
-                android:id="@+id/tv_suprised"
+                android:id="@+id/tv_surprised"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/iv_surprised"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="SURPRISED" />
+
+            <TextView
+                android:id="@+id/tv_surprised_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_surprised"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_disgusted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_mouth_open"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_disgusted" />
+
             <TextView
-                android:id="@+id/tv_mouth"
+                android:id="@+id/tv_disgusted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/iv_disgusted"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="DISGUSTED" />
+
+            <TextView
+                android:id="@+id/tv_disgusted_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_disgusted"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+
             <ImageView
                 android:id="@+id/iv_fear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_smiling"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/ic_fear" />
+
             <TextView
                 android:id="@+id/tv_fear"
                 android:layout_width="wrap_content"
@@ -202,8 +297,17 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="FEAR" />
+
+            <TextView
+                android:id="@+id/tv_fear_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_fear"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="86%" />
         </RelativeLayout>
-    </TableRow>
+    </LinearLayout>
 
 
 </LinearLayout>

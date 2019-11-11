@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/result_image"
             android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:scaleType="fitXY" />
+            android:layout_height="220dp"
+            android:padding="10dp"
+            android:scaleType="fitXY"
+            android:layout_weight="0.5"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:layout_weight="0.5">
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:id="@+id/rl_gender_male"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/rl_paddingleft"
                     android:paddingTop="@dimen/rl_paddingtop"
                     android:paddingRight="@dimen/rl_paddingright"
-                    android:paddingBottom="@dimen/rl_paddingtbottom">
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:visibility="gone"
+                    android:layout_weight="0.5">
 
                     <ImageView
                         android:id="@+id/iv_gender_male"
@@ -52,18 +56,19 @@
                         android:layout_below="@+id/iv_gender_male"
                         android:layout_centerHorizontal="true"
                         android:gravity="center_horizontal"
-                        android:text="male" />
+                        android:text="@string/male" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_gender_female"
-                    android:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/rl_paddingleft"
                     android:paddingTop="@dimen/rl_paddingtop"
                     android:paddingRight="@dimen/rl_paddingright"
-                    android:paddingBottom="@dimen/rl_paddingtbottom">
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:visibility="visible"
+                    android:layout_weight="0.5">
 
                     <ImageView
                         android:id="@+id/iv_gender"
@@ -80,7 +85,7 @@
                         android:layout_below="@+id/iv_gender"
                         android:layout_centerHorizontal="true"
                         android:gravity="center_horizontal"
-                        android:text="female" />
+                        android:text="@string/female" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -89,7 +94,8 @@
                     android:paddingLeft="@dimen/rl_paddingleft"
                     android:paddingTop="@dimen/rl_paddingtop"
                     android:paddingRight="@dimen/rl_paddingright"
-                    android:paddingBottom="@dimen/rl_paddingtbottom">
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:layout_weight="0.5">
 
                     <ImageView
                         android:id="@+id/iv_agerange"
@@ -108,19 +114,23 @@
                         android:gravity="center_horizontal"
                         android:text="20-30" />
                 </RelativeLayout>
-            </TableRow>
+            </LinearLayout>
 
-            <TableRow
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <RelativeLayout
+                    android:id="@+id/rl_beard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/rl_paddingleft"
                     android:paddingTop="@dimen/rl_paddingtop"
                     android:paddingRight="@dimen/rl_paddingright"
-                    android:paddingBottom="@dimen/rl_paddingtbottom">
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:visibility="gone"
+                    android:layout_weight="0.5">
 
                     <ImageView
                         android:id="@+id/iv_beard"
@@ -137,52 +147,110 @@
                         android:layout_below="@+id/iv_beard"
                         android:layout_centerHorizontal="true"
                         android:gravity="center_horizontal"
-                        android:text="beard" />
+                        android:text="@string/beard" />
                 </RelativeLayout>
-
                 <RelativeLayout
+                    android:id="@+id/rl_no_beard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/rl_paddingleft"
                     android:paddingTop="@dimen/rl_paddingtop"
                     android:paddingRight="@dimen/rl_paddingright"
-                    android:paddingBottom="@dimen/rl_paddingtbottom">
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:layout_weight="0.5">
 
                     <ImageView
-                        android:id="@+id/iv_moustache"
+                        android:id="@+id/iv_nobeard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_no_beard" />
+
+                    <TextView
+                        android:id="@+id/tv_nobeard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iv_nobeard"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center_horizontal"
+                        android:text="@string/no_beard" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_mustache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/rl_paddingleft"
+                    android:paddingTop="@dimen/rl_paddingtop"
+                    android:paddingRight="@dimen/rl_paddingright"
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:visibility="gone"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:id="@+id/iv_mustache"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:padding="10dp"
-                        android:src="@drawable/ic_mustache" />
+                        android:src="@drawable/ic_moustache" />
 
                     <TextView
                         android:id="@+id/tv_moustache"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/iv_moustache"
+                        android:layout_below="@+id/iv_mustache"
                         android:layout_centerHorizontal="true"
                         android:gravity="center_horizontal"
-                        android:text="moustache" />
+                        android:text="@string/mustache" />
                 </RelativeLayout>
-            </TableRow>
+                <RelativeLayout
+                    android:id="@+id/rl_no_mustache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/rl_paddingleft"
+                    android:paddingTop="@dimen/rl_paddingtop"
+                    android:paddingRight="@dimen/rl_paddingright"
+                    android:paddingBottom="@dimen/rl_paddingtbottom"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:id="@+id/iv_no_mustache"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_no_mustache" />
+
+                    <TextView
+                        android:id="@+id/tv_no_moustache"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iv_no_mustache"
+                        android:text="@string/no_mustache" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/rl_eye_opened"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
-            android:paddingBottom="@dimen/rl_paddingtbottom">
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:visibility="gone"
+            android:layout_weight="0.25">
 
             <ImageView
-                android:id="@+id/iv_eye"
+                android:id="@+id/iv_eye_opened"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -193,19 +261,49 @@
                 android:id="@+id/tv_eye"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_eye"
+                android:layout_below="@+id/iv_eye_opened"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="male" />
+                android:text="@string/eye_opened" />
         </RelativeLayout>
-
         <RelativeLayout
+            android:id="@+id/rl_eye_closed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
-            android:paddingBottom="@dimen/rl_paddingtbottom">
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@+id/iv_eye_closed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_eye_closed" />
+
+            <TextView
+                android:id="@+id/tv_eye_closed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_eye_closed"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/eye_closed" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_sunglass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/rl_paddingleft"
+            android:paddingTop="@dimen/rl_paddingtop"
+            android:paddingRight="@dimen/rl_paddingright"
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:visibility="gone"
+            android:layout_weight="0.25">
 
             <ImageView
                 android:id="@+id/iv_sunglass"
@@ -222,19 +320,76 @@
                 android:layout_below="@+id/iv_sunglass"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="eye open" />
+                android:text="@string/sunglass" />
         </RelativeLayout>
-
         <RelativeLayout
+            android:id="@+id/rl_eye_glass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
-            android:paddingBottom="@dimen/rl_paddingtbottom">
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:visibility="gone"
+            android:layout_weight="0.25">
 
             <ImageView
-                android:id="@+id/iv_mouth"
+                android:id="@+id/iv_eye_glass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_eye_glass" />
+
+            <TextView
+                android:id="@+id/tv_eye_glass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_eye_glass"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/eyeglass" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_no_eye_glass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/rl_paddingleft"
+            android:paddingTop="@dimen/rl_paddingtop"
+            android:paddingRight="@dimen/rl_paddingright"
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@+id/iv_no_eye_glass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_no_eyeglass" />
+
+            <TextView
+                android:id="@+id/tv_no_eye_glass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_no_eye_glass"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/no_eyeglass" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_mouth_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/rl_paddingleft"
+            android:paddingTop="@dimen/rl_paddingtop"
+            android:paddingRight="@dimen/rl_paddingright"
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:visibility="gone"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@+id/iv_mouth_open"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -242,22 +397,53 @@
                 android:src="@drawable/ic_mouth_open" />
 
             <TextView
-                android:id="@+id/tv_mouth"
+                android:id="@+id/tv_mouth_open"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_mouth"
+                android:layout_below="@+id/iv_mouth_open"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="male" />
+                android:text="@string/mouth_open" />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_mouth_closed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/rl_paddingleft"
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
-            android:paddingBottom="@dimen/rl_paddingtbottom">
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@+id/iv_mouth_closed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_mouth_closed" />
+
+            <TextView
+                android:id="@+id/tv_mouth_closed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_mouth_closed"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/mouth_closed" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_smiling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/rl_paddingleft"
+            android:paddingTop="@dimen/rl_paddingtop"
+            android:paddingRight="@dimen/rl_paddingright"
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:visibility="gone"
+            android:layout_weight="0.25">
 
             <ImageView
                 android:id="@+id/iv_smiling"
@@ -274,9 +460,37 @@
                 android:layout_below="@+id/iv_smiling"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="male" />
+                android:text="@string/smiling" />
         </RelativeLayout>
-    </TableRow>
+        <RelativeLayout
+            android:id="@+id/rl_not_smiling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/rl_paddingleft"
+            android:paddingTop="@dimen/rl_paddingtop"
+            android:paddingRight="@dimen/rl_paddingright"
+            android:paddingBottom="@dimen/rl_paddingtbottom"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@+id/iv_not_smiling"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_no_smile" />
+
+            <TextView
+                android:id="@+id/tv_not_smiling"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_not_smiling"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/not_smiling" />
+        </RelativeLayout>
+    </LinearLayout>
+
 
     <include
         android:id="@+id/iemotion"
