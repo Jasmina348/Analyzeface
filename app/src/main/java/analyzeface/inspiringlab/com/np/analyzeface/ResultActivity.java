@@ -5,12 +5,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +38,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -67,6 +80,8 @@ public class ResultActivity extends AppCompatActivity {
     private Activity mActivity;
     private ProgressBar progressBar;
     private TextView tv_agerange;
+
+
 
     RelativeLayout rl_gender_male, rl_gender_female, rl_mustache, rl_no_mustache, rl_beard, rl_no_beard, rl_eye_opened, rl_eye_closed, rl_sunglass, rl_eyeglass, rl_no_eye_glass, rl_mouth_open, rl_mouth_close, rl_smiling, rl_not_smiling;
     TextView tv_calm_value, tv_angry_value, tv_sad_value, tv_confused_value, tv_happy_value, tv_surprised_value, tv_disgusted_value, tv_fear_value;
@@ -249,6 +264,7 @@ public class ResultActivity extends AppCompatActivity {
 //                        int max = -1;
 //                        String emotion = "";
                         for (int j = 0; j < array.length(); j++) {
+
                             JSONObject o = array.getJSONObject(j);
 //                            if(o.getInt("Confidence") > max) {
 //                                max = o.getInt("Confidence");
@@ -284,19 +300,168 @@ public class ResultActivity extends AppCompatActivity {
 
                 listFace.add(currentFace);
             }
-            Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).into(ivOriginalImage);
+
+            Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    progressBar.setVisibility(View.GONE);
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    progressBar.setVisibility(View.GONE);
+                    return false;
+                }
+            }).into(ivOriginalImage);
 
             mainResponse.setFaces(listFace);
             Log.d(TAG, "loadValueFromIntent: main faces size" + mainResponse.getFaces().size());
             recyclerViewAdapter = new RecyclerViewAdapter(ResultActivity.this, mainResponse.getFaces());
             recyclerView.setAdapter(recyclerViewAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+    public void setDefaultImageInfo(Face face){
+        Glide.with(this).load(Config.IMAGE_URL + face.getImage()).into(ivResultImage);
+        Log.d(TAG, "face image" + Config.IMAGE_URL + face.getImage());
+        tv_agerange.setText(face.getAgeRange().getLow() + "-" + face.getAgeRange().getHigh());
+
+        ArrayList<Feature> featureList = face.getFeatureList();
+
+        for (Feature feature : featureList) {
+            if (feature.getFeature().equalsIgnoreCase("Gender")) {
+                String gender = feature.getValue();
+                if (gender.equalsIgnoreCase("male")) {
+                    rl_gender_male.setVisibility(View.VISIBLE);
+                    rl_gender_female.setVisibility(View.GONE);
+                } else {
+                    rl_gender_male.setVisibility(View.GONE);
+                    rl_gender_female.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Mustache")) {
+                String mustache = feature.getValue();
+                if (mustache.equalsIgnoreCase("true")) {
+                    rl_mustache.setVisibility(View.VISIBLE);
+                    rl_no_mustache.setVisibility(View.GONE);
+                } else {
+                    rl_mustache.setVisibility(View.GONE);
+                    rl_no_mustache.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Beard")) {
+                String beard = feature.getValue();
+                if (beard.equalsIgnoreCase("true")) {
+                    rl_beard.setVisibility(View.VISIBLE);
+                    rl_no_beard.setVisibility(View.GONE);
+                } else {
+                    rl_beard.setVisibility(View.GONE);
+                    rl_no_beard.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Eyes_open")) {
+                String eyes_open = feature.getValue();
+                if (eyes_open.equalsIgnoreCase("true")) {
+                    rl_eye_opened.setVisibility(View.VISIBLE);
+                    rl_eye_closed.setVisibility(View.GONE);
+                } else {
+                    rl_eye_opened.setVisibility(View.GONE);
+                    rl_eye_closed.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Sunglasses")) {
+                String sunglasses = feature.getValue();
+                if (sunglasses.equalsIgnoreCase("true")) {
+                    rl_sunglass.setVisibility(View.VISIBLE);
+                    rl_eyeglass.setVisibility(View.GONE);
+                    rl_no_eye_glass.setVisibility(View.GONE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Eyeglasses")) {
+                String eyeglasses = feature.getValue();
+                if (eyeglasses.equalsIgnoreCase("true")) {
+                    rl_eyeglass.setVisibility(View.VISIBLE);
+                    rl_sunglass.setVisibility(View.GONE);
+                    rl_no_eye_glass.setVisibility(View.GONE);
+                } else {
+                    rl_eyeglass.setVisibility(View.GONE);
+                    rl_sunglass.setVisibility(View.GONE);
+                    rl_no_eye_glass.setVisibility(View.VISIBLE);
+
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Mouth_open")) {
+                String mouth_open = feature.getValue();
+                if (mouth_open.equalsIgnoreCase("true")) {
+                    rl_mouth_open.setVisibility(View.VISIBLE);
+                    rl_mouth_close.setVisibility(View.GONE);
+                } else {
+                    rl_mouth_open.setVisibility(View.GONE);
+                    rl_mouth_close.setVisibility(View.VISIBLE);
+                }
+            }
+            if (feature.getFeature().equalsIgnoreCase("Smile")) {
+                String mouth_open = feature.getValue();
+                if (mouth_open.equalsIgnoreCase("true")) {
+                    rl_smiling.setVisibility(View.VISIBLE);
+                    rl_not_smiling.setVisibility(View.GONE);
+                } else {
+                    rl_smiling.setVisibility(View.GONE);
+                    rl_not_smiling.setVisibility(View.VISIBLE);
+                }
+            }
+
+
+        }
+
+
+    }
+    public void setDefaultImageEmotion(Face face){
+        ArrayList<Emotion> emotionList = face.getEmotion();
+        for (Emotion emotion : emotionList) {
+            if (emotion.getType().equalsIgnoreCase("CALM")) {
+                int calm = emotion.getConfidence();
+                tv_calm_value.setText(calm +"%");
+            }
+
+            if (emotion.getType().equalsIgnoreCase("ANGRY")) {
+                int angry = emotion.getConfidence();
+                tv_angry_value.setText(angry+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("SAD")) {
+                int sad = emotion.getConfidence();
+                tv_sad_value.setText(sad+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("CONFUSED")) {
+                int confused = emotion.getConfidence();
+                tv_confused_value.setText(confused+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("HAPPY")) {
+                int happy = emotion.getConfidence();
+                tv_happy_value.setText(happy+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("SURPRISED")) {
+                int surprised = emotion.getConfidence();
+                tv_surprised_value.setText(surprised+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("DISGUSTED")) {
+                int disgusted = emotion.getConfidence();
+                tv_disgusted_value.setText(disgusted+"%");
+            }
+            if (emotion.getType().equalsIgnoreCase("FEAR")) {
+                int fear = emotion.getConfidence();
+                tv_fear_value.setText(fear+"%");
+            }
+
+        }
+
+
+    }
+
 
 
     public void setUpFacesInfromation(Face face) {
@@ -424,7 +589,7 @@ public class ResultActivity extends AppCompatActivity {
             }
             if (emotion.getType().equalsIgnoreCase("DISGUSTED")) {
                 int disgusted = emotion.getConfidence();
-                tv_angry_value.setText(disgusted+"%");
+                tv_disgusted_value.setText(disgusted+"%");
             }
             if (emotion.getType().equalsIgnoreCase("FEAR")) {
                 int fear = emotion.getConfidence();

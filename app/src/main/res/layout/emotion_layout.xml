@@ -4,9 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        style="@style/text_style"
-        android:text="Emotions" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

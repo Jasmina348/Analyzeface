@@ -1,6 +1,10 @@
 package analyzeface.inspiringlab.com.np.analyzeface;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,12 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
@@ -30,6 +39,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private MainResponse mainResponse;
     private ArrayList<Face> faces;
     private Context context;
+    private int imageState = 1;
+
 
 
     public RecyclerViewAdapter(Context ctx, ArrayList<Face> mainResponse) {
@@ -50,20 +61,48 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final RecyclerViewAdapter.MyViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: " + faces.get(position).getImage());
-//        Glide.with(context).load(mainResponse.getImage()).into(holder.mainImage);
-        Glide.with(context).load(Config.IMAGE_URL + faces.get(position).getImage()).into(holder.iv_faces_image);
+        Glide.with(context).load(Config.IMAGE_URL + faces.get(position).getImage()).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                holder.progressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.progressBar.setVisibility(View.GONE);
+                return false;
+            }
+        })
+                .into(holder.iv_faces_image);
+        ((ResultActivity)context).setDefaultImageInfo(faces.get(0));
+        ((ResultActivity)context).setDefaultImageEmotion(faces.get(0));
+
         holder.iv_faces_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                if(imageState % 2 == 0){
+                    ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.BLACK);
+
+//                }
+//                else{
+//                    ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.BLACK);
+//
+//
+//                }
+//                imageState++;
+//            }
+
+
+
+
 //               Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
+
                     ((ResultActivity)context).setUpFacesInfromation(faces.get(position));
                 ((ResultActivity)context).setUpEmotionInformation(faces.get(position));
             }
         });
-//        setUpFeatureList(holder, position);
-//        setUpEmotionList(holder, position);
-//        holder.high_value.setText(" "+faces.get(position).getAgeRange().getHigh());
-//        holder.low_value.setText(" "+faces.get(position).getAgeRange().getLow());
+
 
     }
 
@@ -79,6 +118,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView high_value;
         TextView low_value;
         ImageView iv_faces_image;
+        ProgressBar progressBar;
 
 
         public MyViewHolder(View itemView) {
@@ -89,6 +129,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             high_value = (TextView) itemView.findViewById(R.id.high_value);
             low_value = (TextView) itemView.findViewById(R.id.low_value);
             iv_faces_image= (ImageView) itemView.findViewById(R.id.iv_faces_image);
+            progressBar =(ProgressBar) itemView.findViewById(R.id.progress_bar);
 
         }
 

@@ -5,6 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,12 +26,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:divider="?android:dividerHorizontal"
+            android:showDividers="middle"
             android:padding="10dp"
             android:layout_weight="0.5">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -91,7 +99,7 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/rl_paddingleft"
+                    android:paddingLeft="12dp"
                     android:paddingTop="@dimen/rl_paddingtop"
                     android:paddingRight="@dimen/rl_paddingright"
                     android:paddingBottom="@dimen/rl_paddingtbottom"
@@ -119,6 +127,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -163,6 +173,7 @@
                         android:id="@+id/iv_nobeard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
                         android:padding="10dp"
                         android:src="@drawable/ic_no_beard" />
 
@@ -197,8 +208,8 @@
 
                     <TextView
                         android:id="@+id/tv_moustache"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_below="@+id/iv_mustache"
                         android:layout_centerHorizontal="true"
                         android:gravity="center_horizontal"
@@ -227,11 +238,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/iv_no_mustache"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center_horizontal"
                         android:text="@string/no_mustache" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:dividerHorizontal"
+        android:showDividers="middle"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -293,6 +313,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/eye_closed" />
         </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/rl_sunglass"
@@ -489,6 +510,10 @@
                 android:gravity="center_horizontal"
                 android:text="@string/not_smiling" />
         </RelativeLayout>
+    </LinearLayout>
+    <TextView
+        style="@style/text_style"
+        android:text="Emotions" />
     </LinearLayout>
 
 
