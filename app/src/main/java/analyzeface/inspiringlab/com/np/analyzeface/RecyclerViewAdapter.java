@@ -39,7 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private MainResponse mainResponse;
     private ArrayList<Face> faces;
     private Context context;
-    private int imageState = 1;
+    private int selectedPosition=-1;
 
 
 
@@ -77,26 +77,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .into(holder.iv_faces_image);
         ((ResultActivity)context).setDefaultImageInfo(faces.get(0));
         ((ResultActivity)context).setDefaultImageEmotion(faces.get(0));
+        if(selectedPosition==position)
+            ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.parseColor("#50044c"));
+        else
+            ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.parseColor("#ffffff"));
+
 
         holder.iv_faces_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(imageState % 2 == 0){
-                    ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.BLACK);
+                selectedPosition=position;
+                notifyDataSetChanged();
 
-//                }
-//                else{
-//                    ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.BLACK);
-//
-//
-//                }
-//                imageState++;
-//            }
-
-
-
-
-//               Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
 
                     ((ResultActivity)context).setUpFacesInfromation(faces.get(position));
                 ((ResultActivity)context).setUpEmotionInformation(faces.get(position));

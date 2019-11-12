@@ -7,7 +7,7 @@
     <dimen name="rl_paddingright">10dp</dimen>
     <dimen name="rl_paddingtbottom">10dp</dimen>
     <dimen name="info_image">40dp</dimen>
-    <dimen name="card_elevation">5dp</dimen>
-<dimen name="card_corner_radius">15dp</dimen>
-    <dimen name="card_layout_margin">10dp</dimen>
+    <dimen name="card_elevation">8dp</dimen>
+<dimen name="card_corner_radius">5dp</dimen>
+    <dimen name="card_layout_margin">8dp</dimen>
 </resources>
