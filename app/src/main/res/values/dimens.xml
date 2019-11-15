@@ -8,6 +8,7 @@
     <dimen name="rl_paddingtbottom">10dp</dimen>
     <dimen name="info_image">40dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
-<dimen name="card_corner_radius">5dp</dimen>
-    <dimen name="card_layout_margin">8dp</dimen>
+    <dimen name="card_corner_radius">5dp</dimen>
+    <dimen name="card_layout_margin">15dp</dimen>
+    <dimen name="progress_bar_circle">70dp</dimen>
 </resources>

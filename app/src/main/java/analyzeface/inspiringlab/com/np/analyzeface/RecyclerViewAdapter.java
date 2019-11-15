@@ -1,10 +1,12 @@
 package analyzeface.inspiringlab.com.np.analyzeface;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,14 +41,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private MainResponse mainResponse;
     private ArrayList<Face> faces;
     private Context context;
-    private int selectedPosition=-1;
-
+    private int selectedPosition = 0;
 
 
     public RecyclerViewAdapter(Context ctx, ArrayList<Face> mainResponse) {
         this.context = ctx;
         inflater = LayoutInflater.from(ctx);
         this.faces = mainResponse;
+
+        /* set default value */
+        ((ResultActivity) context).setDefaultImageInfo(this.faces.get(0));
+        ((ResultActivity) context).setDefaultImageEmotion(this.faces.get(0));
     }
 
     @Override
@@ -75,24 +80,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         })
                 .into(holder.iv_faces_image);
-        ((ResultActivity)context).setDefaultImageInfo(faces.get(0));
-        ((ResultActivity)context).setDefaultImageEmotion(faces.get(0));
-        if(selectedPosition==position)
-            ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.parseColor("#50044c"));
-        else
-            ((GradientDrawable)holder.iv_faces_image.getBackground()).setStroke(10,Color.parseColor("#ffffff"));
+
+
+        if (selectedPosition == position) {
+            ((GradientDrawable) holder.border.getBackground()).setStroke(10, Color.parseColor("#0DBF2C"));
+            holder.info_cardview.setElevation(10);
+        } else
+            ((GradientDrawable) holder.border.getBackground()).setStroke(10, Color.parseColor("#C1C1C1"));
 
 
         holder.iv_faces_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedPosition=position;
+                selectedPosition = position;
                 notifyDataSetChanged();
 
 //            Toast.makeText(context, position+"", Toast.LENGTH_SHORT).show();
 
-                    ((ResultActivity)context).setUpFacesInfromation(faces.get(position));
-                ((ResultActivity)context).setUpEmotionInformation(faces.get(position));
+                ((ResultActivity) context).setUpFacesInfromation(faces.get(position));
+                ((ResultActivity) context).setUpEmotionInformation(faces.get(position));
             }
         });
 
@@ -112,6 +118,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView low_value;
         ImageView iv_faces_image;
         ProgressBar progressBar;
+        View border;
+        CardView info_cardview;
 
 
         public MyViewHolder(View itemView) {
@@ -121,8 +129,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv2 = (TableLayout) itemView.findViewById(R.id.emotionList);
             high_value = (TextView) itemView.findViewById(R.id.high_value);
             low_value = (TextView) itemView.findViewById(R.id.low_value);
-            iv_faces_image= (ImageView) itemView.findViewById(R.id.iv_faces_image);
-            progressBar =(ProgressBar) itemView.findViewById(R.id.progress_bar);
+            iv_faces_image = (ImageView) itemView.findViewById(R.id.iv_faces_image);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            border = (View) itemView.findViewById(R.id.rounded_circle);
+            info_cardview = (CardView) itemView.findViewById(R.id.info_card_view);
+
 
         }
 
@@ -186,7 +197,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             emotionValue.setLayoutParams(params);
 
             emotionName.setText(emotions.getType());
-            emotionValue.setText("" + emotions.getConfidence()+"%");
+            emotionValue.setText("" + emotions.getConfidence() + "%");
             Log.d("EMOTIONNAME", "" + emotions.getType());
             Log.d("EMOTION LENGTH", emotions.getType());
 
@@ -198,5 +209,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    }
+}
 

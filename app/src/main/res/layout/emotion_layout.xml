@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,31 +20,52 @@
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
 
-            <ImageView
-                android:id="@+id/iv_calm"
+            <RelativeLayout
+                android:id="@+id/rl_calm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:padding="10dp"
-                android:src="@drawable/ic_calm" />
+                android:clickable="false"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/tv_calm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_calm"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal"
-                android:text="CALM" />
+                <ProgressBar
+                    android:id="@+id/pb_calm"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="@dimen/progress_bar_circle"
+                    android:layout_height="@dimen/progress_bar_circle"
+                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/circle_shape"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="65"
+                    android:progressDrawable="@drawable/circular_progress_bar" />
 
-            <TextView
-                android:id="@+id/tv_calm_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_calm"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal"
-                android:text="86%" />
+                <ImageView
+                    android:id="@+id/iv_calm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_calm" />
+            </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/tv_calm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/rl_calm"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center_horizontal"
+                            android:text="CALM" />
+
+                        <TextView
+                            android:id="@+id/tv_calm_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_calm"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center_horizontal"
+                            android:text="86%" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -57,19 +77,40 @@
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
 
+        <RelativeLayout
+            android:id="@+id/rl_angry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_angry"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+
             <ImageView
                 android:id="@+id/iv_angry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_angry" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_angry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_angry"
+                android:layout_below="@+id/rl_angry"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="ANGRY" />
@@ -94,19 +135,40 @@
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
 
+        <RelativeLayout
+            android:id="@+id/rl_sad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_sad"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+
             <ImageView
                 android:id="@+id/iv_sad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_sad" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_sad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_sad"
+                android:layout_below="@+id/rl_sad"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="SAD" />
@@ -129,20 +191,42 @@
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+        <RelativeLayout
+            android:id="@+id/rl_confused"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_confused"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+
 
             <ImageView
                 android:id="@+id/iv_confused"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_confused" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_confused"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_confused"
+                android:layout_below="@+id/rl_confused"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="CONFUSED" />
@@ -171,20 +255,42 @@
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+        <RelativeLayout
+            android:id="@+id/rl_happy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_happy"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+
 
             <ImageView
                 android:id="@+id/iv_happy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_happy" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_happy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_happy"
+                android:layout_below="@+id/rl_happy"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="HAPPY" />
@@ -207,20 +313,41 @@
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+        <RelativeLayout
+            android:id="@+id/rl_surprised"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_surprised"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
 
             <ImageView
                 android:id="@+id/iv_surprised"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_surprised" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_surprised"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_surprised"
+                android:layout_below="@+id/rl_surprised"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="SURPRISED" />
@@ -243,20 +370,41 @@
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+        <RelativeLayout
+            android:id="@+id/rl_disgusted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_disgusted"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
 
             <ImageView
                 android:id="@+id/iv_disgusted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_disgusted" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_disgusted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_disgusted"
+                android:layout_below="@+id/rl_disgusted"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="DISGUSTED" />
@@ -279,20 +427,42 @@
             android:paddingTop="@dimen/rl_paddingtop"
             android:paddingRight="@dimen/rl_paddingright"
             android:paddingBottom="@dimen/rl_paddingtbottom">
+        <RelativeLayout
+            android:id="@+id/rl_fear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pb_fear"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="@dimen/progress_bar_circle"
+                android:layout_height="@dimen/progress_bar_circle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="65"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+
 
             <ImageView
                 android:id="@+id/iv_fear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_fear" />
+        </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_fear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_fear"
+                android:layout_below="@+id/rl_fear"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:text="FEAR" />

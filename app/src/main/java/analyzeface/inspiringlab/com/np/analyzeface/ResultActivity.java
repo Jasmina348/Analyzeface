@@ -56,7 +56,10 @@ import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import analyzeface.inspiringlab.com.np.analyzeface.database.DbHelper;
+import analyzeface.inspiringlab.com.np.analyzeface.database.DbModel;
 import analyzeface.inspiringlab.com.np.analyzeface.model.AgeRange;
 import analyzeface.inspiringlab.com.np.analyzeface.model.Emotion;
 import analyzeface.inspiringlab.com.np.analyzeface.model.Face;
@@ -80,13 +83,15 @@ public class ResultActivity extends AppCompatActivity {
     private Activity mActivity;
     private ProgressBar progressBar;
     private TextView tv_agerange;
-
+    ProgressBar pb_calm, pb_angry, pb_sad, pb_confused, pb_happy, pb_surprised, pb_disgusted, pb_fear;
 
 
     RelativeLayout rl_gender_male, rl_gender_female, rl_mustache, rl_no_mustache, rl_beard, rl_no_beard, rl_eye_opened, rl_eye_closed, rl_sunglass, rl_eyeglass, rl_no_eye_glass, rl_mouth_open, rl_mouth_close, rl_smiling, rl_not_smiling;
     TextView tv_calm_value, tv_angry_value, tv_sad_value, tv_confused_value, tv_happy_value, tv_surprised_value, tv_disgusted_value, tv_fear_value;
 
     ImageView ivOriginalImage;
+    private DbHelper db;
+    private List<DbModel> dbList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +129,15 @@ public class ResultActivity extends AppCompatActivity {
         tv_surprised_value = findViewById(R.id.tv_surprised_value);
         tv_disgusted_value = findViewById(R.id.tv_disgusted_value);
         tv_fear_value = findViewById(R.id.tv_fear_value);
+        pb_calm = findViewById(R.id.pb_calm);
+        pb_angry = findViewById(R.id.pb_angry);
+        pb_sad = findViewById(R.id.pb_sad);
+        pb_confused = findViewById(R.id.pb_confused);
+        pb_happy = findViewById(R.id.pb_happy);
+        pb_surprised = findViewById(R.id.pb_surprised);
+        pb_disgusted = findViewById(R.id.pb_disgusted);
+        pb_fear = findViewById(R.id.pb_fear);
+        db = new DbHelper(this);
 
 
         //progressBar = findViewById(R.id.image_loading);
@@ -208,8 +222,12 @@ public class ResultActivity extends AppCompatActivity {
 
 
     private void loadValueFromIntent() {
+        Bundle extras = getIntent().getExtras();
+        String response = extras.getString("analysis_result");
+        Uri imageUri = Uri.parse(extras.getString("imageUri"));
+//        byte[] byteArray = extras.getByteArray("picture");
+//        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-        String response = getIntent().getExtras().getString("analysis_result");
         try {
             JSONObject res = new JSONObject(response);
             Log.d(TAG, "loadValueFromIntent: " + response);
@@ -301,21 +319,26 @@ public class ResultActivity extends AppCompatActivity {
                 listFace.add(currentFace);
             }
 
-            Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
+//            saveDetails(mainResponse.getImage());
+            ivOriginalImage.setImageURI(imageUri);
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-            }).into(ivOriginalImage);
 
+//
+//            Glide.with(this).load(Config.IMAGE_URL + mainResponse.getImage()).listener(new RequestListener<Drawable>() {
+//                @Override
+//                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                    progressBar.setVisibility(View.GONE);
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                    progressBar.setVisibility(View.GONE);
+//                    return false;
+//                }
+//            }).into(ivOriginalImage);
             mainResponse.setFaces(listFace);
+
             Log.d(TAG, "loadValueFromIntent: main faces size" + mainResponse.getFaces().size());
             recyclerViewAdapter = new RecyclerViewAdapter(ResultActivity.this, mainResponse.getFaces());
             recyclerView.setAdapter(recyclerViewAdapter);
@@ -324,8 +347,17 @@ public class ResultActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
     }
-    public void setDefaultImageInfo(Face face){
+
+    private void saveDetails(String imageid) {
+        // inserting note in db and getting
+        // newly inserted note id
+        long id = db.insertImage(imageid);
+        Log.d(TAG,"IMAGE ADDED TO THE DATABASE" + imageid);
+    }
+
+    public void setDefaultImageInfo(Face face) {
         Glide.with(this).load(Config.IMAGE_URL + face.getImage()).into(ivResultImage);
         Log.d(TAG, "face image" + Config.IMAGE_URL + face.getImage());
         tv_agerange.setText(face.getAgeRange().getLow() + "-" + face.getAgeRange().getHigh());
@@ -420,48 +452,56 @@ public class ResultActivity extends AppCompatActivity {
 
 
     }
-    public void setDefaultImageEmotion(Face face){
+
+    public void setDefaultImageEmotion(Face face) {
         ArrayList<Emotion> emotionList = face.getEmotion();
         for (Emotion emotion : emotionList) {
             if (emotion.getType().equalsIgnoreCase("CALM")) {
                 int calm = emotion.getConfidence();
-                tv_calm_value.setText(calm +"%");
+                tv_calm_value.setText(calm + "%");
+                pb_calm.setProgress(calm);
             }
 
             if (emotion.getType().equalsIgnoreCase("ANGRY")) {
                 int angry = emotion.getConfidence();
-                tv_angry_value.setText(angry+"%");
+                tv_angry_value.setText(angry + "%");
+                pb_angry.setProgress(angry);
             }
             if (emotion.getType().equalsIgnoreCase("SAD")) {
                 int sad = emotion.getConfidence();
-                tv_sad_value.setText(sad+"%");
+                tv_sad_value.setText(sad + "%");
+                pb_sad.setProgress(sad);
             }
             if (emotion.getType().equalsIgnoreCase("CONFUSED")) {
                 int confused = emotion.getConfidence();
-                tv_confused_value.setText(confused+"%");
+                tv_confused_value.setText(confused + "%");
+                pb_confused.setProgress(confused);
             }
             if (emotion.getType().equalsIgnoreCase("HAPPY")) {
                 int happy = emotion.getConfidence();
-                tv_happy_value.setText(happy+"%");
+                tv_happy_value.setText(happy + "%");
+                pb_happy.setProgress(happy);
             }
             if (emotion.getType().equalsIgnoreCase("SURPRISED")) {
                 int surprised = emotion.getConfidence();
-                tv_surprised_value.setText(surprised+"%");
+                tv_surprised_value.setText(surprised + "%");
+                pb_surprised.setProgress(surprised);
             }
             if (emotion.getType().equalsIgnoreCase("DISGUSTED")) {
                 int disgusted = emotion.getConfidence();
-                tv_disgusted_value.setText(disgusted+"%");
+                tv_disgusted_value.setText(disgusted + "%");
+                pb_disgusted.setProgress(disgusted);
             }
             if (emotion.getType().equalsIgnoreCase("FEAR")) {
                 int fear = emotion.getConfidence();
-                tv_fear_value.setText(fear+"%");
+                tv_fear_value.setText(fear + "%");
+                pb_fear.setProgress(fear);
             }
 
         }
 
 
     }
-
 
 
     public void setUpFacesInfromation(Face face) {
@@ -564,36 +604,44 @@ public class ResultActivity extends AppCompatActivity {
         for (Emotion emotion : emotionList) {
             if (emotion.getType().equalsIgnoreCase("CALM")) {
                 int calm = emotion.getConfidence();
-                tv_calm_value.setText(calm +"%");
+                tv_calm_value.setText(calm + "%");
+                pb_calm.setProgress(calm);
             }
 
             if (emotion.getType().equalsIgnoreCase("ANGRY")) {
                 int angry = emotion.getConfidence();
-                tv_angry_value.setText(angry+"%");
+                tv_angry_value.setText(angry + "%");
+                pb_angry.setProgress(angry);
             }
             if (emotion.getType().equalsIgnoreCase("SAD")) {
                 int sad = emotion.getConfidence();
-                tv_sad_value.setText(sad+"%");
+                tv_sad_value.setText(sad + "%");
+                pb_sad.setProgress(sad);
             }
             if (emotion.getType().equalsIgnoreCase("CONFUSED")) {
                 int confused = emotion.getConfidence();
-                tv_confused_value.setText(confused+"%");
+                tv_confused_value.setText(confused + "%");
+                pb_confused.setProgress(confused);
             }
             if (emotion.getType().equalsIgnoreCase("HAPPY")) {
                 int happy = emotion.getConfidence();
-                tv_happy_value.setText(happy+"%");
+                tv_happy_value.setText(happy + "%");
+                pb_happy.setProgress(happy);
             }
             if (emotion.getType().equalsIgnoreCase("SURPRISED")) {
                 int surprised = emotion.getConfidence();
-                tv_surprised_value.setText(surprised+"%");
+                tv_surprised_value.setText(surprised + "%");
+                pb_surprised.setProgress(surprised);
             }
             if (emotion.getType().equalsIgnoreCase("DISGUSTED")) {
                 int disgusted = emotion.getConfidence();
-                tv_disgusted_value.setText(disgusted+"%");
+                tv_disgusted_value.setText(disgusted + "%");
+                pb_disgusted.setProgress(disgusted);
             }
             if (emotion.getType().equalsIgnoreCase("FEAR")) {
                 int fear = emotion.getConfidence();
-                tv_fear_value.setText(fear+"%");
+                tv_fear_value.setText(fear + "%");
+                pb_fear.setProgress(fear);
             }
 
         }
